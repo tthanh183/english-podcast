@@ -17,7 +17,7 @@ public class Rating {
     private Long userId;
     @Id
     private Long podcastId;
-    private int rating;
+    private int rates;
     @Column(name = "create_date")
     private LocalDate createdDate;
 }
