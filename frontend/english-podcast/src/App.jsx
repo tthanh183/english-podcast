@@ -1,7 +1,10 @@
 import React from "react";
+import { ToastContainer } from "react-toastify";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import routes from "./routes/routes.jsx";
 import { AuthProvider } from "./components/auth/AuthProvider.jsx";
+
+import 'react-toastify/ReactToastify.css';
 
 function App() {
   return (
@@ -23,6 +26,7 @@ function App() {
             );
           })}
         </Routes>
+        <ToastContainer />
       </Router>
     </AuthProvider>
   );

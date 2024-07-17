@@ -1,12 +1,15 @@
-import React, { useContext } from "react";
-import { AuthContext } from "./AuthContext";
-
+import React from "react";
+import { useAuth } from "./AuthProvider";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const Logout = () => {
-  const { logout } = useContext(AuthContext);
+  const auth = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();
-    window.location.href = "/login";
+    auth.handleLogout();
+    toast.success("Logout successfully!")
+    navigate("/");
   };
 
   return <button onClick={handleLogout}>Logout</button>;

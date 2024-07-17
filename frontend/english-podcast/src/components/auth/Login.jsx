@@ -21,6 +21,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const userData = await authenticationService.login(data);
+      console.log(userData);
       if (userData) {
         auth.handleLogin(userData.token);
         toast.success("Login successfully!");
@@ -60,7 +61,7 @@ const Login = () => {
                 }
               })}
             />
-            {errors.email && <span className="text-red-500">{errors.email.message}</span>}
+            {errors.email && <span className="text-green-500">{errors.email.message}</span>}
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Password
             </Typography>
@@ -80,7 +81,7 @@ const Login = () => {
                 }
               })}
             />
-            {errors.password && <span className="text-red-500">{errors.password.message}</span>}
+            {errors.password && <span className="text-green-500">{errors.password.message}</span>}
           </div>
           <div className="flex flex-col gap-1">
             <Checkbox
@@ -104,9 +105,9 @@ const Login = () => {
                 required: "You must agree to the terms and conditions"
               })}
             />
-            {errors.agreeToTerms && <span className="text-red-500">{errors.agreeToTerms.message}</span>}
+            {errors.agreeToTerms && <span className="text-green-500">{errors.agreeToTerms.message}</span>}
           </div>
-          <Button type="submit" className="mt-6 bg-red-700 hover:bg-red-900" fullWidth>
+          <Button type="submit" className="mt-6 bg-green-700 hover:bg-green-900" fullWidth>
             Sign Up
           </Button>
           <Typography color="gray" className="mt-4 text-center font-normal">

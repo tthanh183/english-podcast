@@ -11,13 +11,14 @@ import {
   Avatar,
   Typography,
 } from "@material-tailwind/react";
+import Logout from "../auth/Logout";
 
 const Header = () => {
   const { user, handleLogout, isAuthenticated } = useAuth();
 
   return (
-    <div className="p-3 bg-black flex items-center justify-between">
-      <div className="flex items-center space-x-8">
+    <div className="p-3 bg-transparent flex items-center justify-between fixed w-[100%]">
+      <div className="flex items-center space-x-8 ">
         <h1 className="text-[40px] uppercase font-bold text-green-900">
           Podcast
         </h1>
@@ -136,7 +137,7 @@ const Header = () => {
                     />
                   </svg>
                   <Typography variant="small" className="text-black font-sans">
-                    Sign Out
+                    <Logout/>
                   </Typography>
                 </MenuItem>
               </MenuList>

@@ -16,10 +16,11 @@ export const AuthProvider = ({ children }) => {
 
   const handleLogin = (token) => {
     const decodedUser = jwtDecode(token);
-    localStorage.setItem("email", decodedUser.email);
+    localStorage.setItem("email", decodedUser.sub);
     localStorage.setItem("name", decodedUser.name);
-    localStorage.setItem("token", token); 
     localStorage.setItem("avatar", decodedUser.avatar);
+    localStorage.setItem("roles", decodedUser.roles);
+    localStorage.setItem("token", token); 
     setUser(decodedUser);
     setIsAuthenticated(true);
   };
@@ -27,8 +28,9 @@ export const AuthProvider = ({ children }) => {
   const handleLogout = () => {
     localStorage.removeItem("email");
     localStorage.removeItem("name");
-    localStorage.removeItem("token");
     localStorage.removeItem("avatar");
+    localStorage.removeItem("roles");
+    localStorage.removeItem("token");
     setUser(null);
     setIsAuthenticated(false);
   };
