@@ -19,8 +19,10 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class CustomUserDetails implements UserDetails {
     private Long id;
-    private  String email;
+    private String email;
     private String password;
+    private String name;
+    private String avatar;
     private Collection<GrantedAuthority> authorities;
 
     public static CustomUserDetails buildUserDetails(User user){
@@ -32,6 +34,8 @@ public class CustomUserDetails implements UserDetails {
                 user.getId(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getName(),
+                user.getAvatar(),
                 authorities);
 
     }
@@ -48,6 +52,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return name;
     }
 }
