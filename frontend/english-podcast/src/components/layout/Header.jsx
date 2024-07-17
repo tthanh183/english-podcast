@@ -18,7 +18,7 @@ const Header = () => {
   return (
     <div className="p-3 bg-black flex items-center justify-between">
       <div className="flex items-center space-x-8">
-        <h1 className="text-[40px] uppercase font-bold text-red-900">
+        <h1 className="text-[40px] uppercase font-bold text-green-900">
           Podcast
         </h1>
         <nav className="flex items-center space-x-8">
@@ -41,7 +41,7 @@ const Header = () => {
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
-                  fill="red"
+                  fill="green"
                   className="h-5 w-5"
                 >
                   <path
@@ -145,7 +145,7 @@ const Header = () => {
         ) : (
           <Link
             to={"/login"}
-            className="p-2 text-white bg-red-700 hover:bg-red-900 font-sans text-lg rounded-md"
+            className="p-2 text-white bg-green-700 hover:bg-green-900 font-sans text-lg rounded-md"
           >
             Login
           </Link>

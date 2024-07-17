@@ -1,11 +1,11 @@
 import React from 'react';
-import HomePage from '../components/home/HomePage';
+import LandingPage from '../components/home/LandingPage';
 import Login from '../components/auth/Login';
 
 const routes = [
   {
     path: '/',
-    element: <HomePage />,
+    element: <LandingPage/>,
   },
   {
     path: '/login',
