@@ -15,16 +15,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
+@CrossOrigin("*")
 public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -50,9 +48,10 @@ public class AuthController {
                 .stream()
                 .map(GrantedAuthority::getAuthority).toList();
         return ResponseEntity.ok(new AuthResponseDTO(
-                customUserDetails.getId(),
                 customUserDetails.getEmail(),
+                customUserDetails.getUsername(),
                 jwt,
+                customUserDetails.getAvatar(),
                 roles));
     }
 }
