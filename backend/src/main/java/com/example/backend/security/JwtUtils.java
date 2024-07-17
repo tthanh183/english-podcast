@@ -5,12 +5,14 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtils {
@@ -23,12 +25,18 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     public String generateJwtTokenForUser(Authentication authentication){
-        String username = authentication.getName();
+        CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority).toList();
         Date currentDate = new Date();
         Date expirationDate = new Date(currentDate.getTime() + jwtExpirationMs);
 
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(userDetails.getUsername())
+                .claim("name", userDetails.getName())
+                .claim("avatar", userDetails.getAvatar())
+                .claim("roles", roles)
                 .setIssuedAt(currentDate)
                 .setExpiration(expirationDate)
                 .signWith(key(), SignatureAlgorithm.HS256).compact();

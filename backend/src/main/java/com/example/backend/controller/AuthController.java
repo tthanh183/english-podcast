@@ -49,9 +49,7 @@ public class AuthController {
                 .map(GrantedAuthority::getAuthority).toList();
         return ResponseEntity.ok(new AuthResponseDTO(
                 customUserDetails.getEmail(),
-                customUserDetails.getUsername(),
                 jwt,
-                customUserDetails.getAvatar(),
                 roles));
     }
 }
