@@ -1,10 +1,11 @@
 import React from 'react'
 
+import {Link} from 'react-router-dom'
 const Header = () => {
   return (
-    <div className='p-4 bg-black flex items-center justify-between top-0 left-0'>
-        <div className='flex items-center space-x-8 space-y-1'>
-            <h1 className='text-[40px] uppercase font-bold text-green-700'>Podcast</h1>
+    <div className='p-3 bg-black flex items-center justify-between'>
+        <div className='flex items-center space-x-8'>
+            <h1 className='text-[40px] uppercase font-bold text-red-900'>Podcast</h1>
             <nav className='flex items-center space-x-8'>
                 <a href='#' className='text-white font-sans text-lg'>Home</a>
                 <a href='#' className='text-white font-sans text-lg'>About</a>
@@ -12,8 +13,9 @@ const Header = () => {
             </nav>
         </div>
         <div className='flex items-center space-x-4'>
-            <input type='text' placeholder='Search' className='p-2 text-black font-sans text-lg'/>
-            <button className='p-2 text-white bg-green-500 hover:bg-green-700 font-sans text-lg rounded-md'>Search</button>
+            {/* <input type='text' placeholder='Search' className='p-2 text-black font-sans text-base'/>
+            <button className='p-2 text-white bg-red-500 hover:bg-red-700 font-sans text-lg rounded-md'>Search</button> */}
+            <Link to={'/login'} className='p-2 text-white bg-red-700 hover:bg-red-900 font-sans text-lg rounded-md'>Login</Link>
         </div>
     </div>
   )

@@ -1,14 +1,17 @@
-import './App.css'
-import Header from './components/layout/Header'
-import Banner from './components/layout/Banner'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import routes from './routes/routes.jsx'; 
 
 function App() {
   return (
-    <>
-      <Header/>
-      <Banner/>
-    </>
-  )
+    <Router>
+      <Routes>
+        {routes.map((route, index) => (
+          <Route key={index} path={route.path} element={route.element} />
+        ))}
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
