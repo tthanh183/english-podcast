@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import {
   Card,
@@ -8,22 +8,23 @@ import {
   Typography,
 } from "@material-tailwind/react";
 
-import * as authenticationService from '../../service/auth/AuthenticationService'
+import * as authenticationService from "../../service/auth/AuthenticationService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuth } from "./AuthProvider";
+
 const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const auth = useAuth();
+
   const onSubmit = async (data) => {
     try {
-      const userData = await authenticationService.login(data)
-      if(userData.token) {
-        localStorage.setItem('token', userData.token);
-        localStorage.setItem('email', userData.email);
-        navigate('/')
-        toast.success("Login successfully!")
-      }else {
-        console.log("Login failed");
+      const userData = await authenticationService.login(data);
+      if (userData) {
+        auth.handleLogin(userData.token);
+        toast.success("Login successfully!");
+        navigate("/");
       }
     } catch (error) {
       toast.error(error.message);

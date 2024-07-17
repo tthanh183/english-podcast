@@ -10,6 +10,10 @@ const routes = [
   {
     path: '/login',
     element: <Login />,
+  },
+  {
+    path: '/upload',
+    
   }
 ];
 
