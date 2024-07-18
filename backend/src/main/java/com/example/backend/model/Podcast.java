@@ -22,6 +22,8 @@ public class Podcast {
     private String description;
     @Column(name = "date_create")
     private LocalDate createdDate;
+    @Column(name = "date_update")
+    private LocalDate updatedDate;
     private String image;
     private int star;
 

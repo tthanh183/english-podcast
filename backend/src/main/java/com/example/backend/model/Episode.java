@@ -22,6 +22,8 @@ public class Episode {
     private String description;
     @Column(name = "date_create")
     private LocalDate createdDate;
+    @Column(name = "date_update")
+    private LocalDate updatedDate;
     private String url;
     private String script;
     private int duration;
