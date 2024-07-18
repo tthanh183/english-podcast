@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { GrChannel } from "react-icons/gr";
 import { Avatar } from "@material-tailwind/react";
 import { GrOverview } from "react-icons/gr";
 import { FcStatistics } from "react-icons/fc";

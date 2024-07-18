@@ -2,7 +2,8 @@ import React, {useState} from 'react'
 import ChannelSideBar from './ChannelSideBar'
 import Overview from "./Overview";
 import Statistic from "./Statistic";
-import PodcastManager from "./PodcastManager";
+import PodcastTable from "./PodcastTable";
+
 const Channel = () => {
   const [activeContent, setActiveContent] = useState("overview");
 
@@ -13,7 +14,7 @@ const Channel = () => {
       case "statistic":
         return <Statistic/>;
       case "podcast":
-        return <PodcastManager/>;
+        return <PodcastTable/>;
       default:
         return <Overview />;
     }
