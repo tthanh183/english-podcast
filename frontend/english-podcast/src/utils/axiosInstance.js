@@ -1,10 +1,10 @@
 // import axios from 'axios';
 // import {toast} from "react-toastify";
 
-// const apiUrl = process.env.REACT_APP_API_URL;
+// const apiUrl = "http://localhost:8080"
 
 // const axiosInstance = axios.create({
-//   baseURL: `${apiUrl}/api/auth`,
+//   baseURL: `${apiUrl}/api`,
 // });
 
 // axiosInstance.interceptors.request.use(

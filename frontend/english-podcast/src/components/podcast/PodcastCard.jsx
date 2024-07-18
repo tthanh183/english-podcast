@@ -11,7 +11,7 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 
-const PodcastCard = () => {
+const PodcastCard = ({podcast}) => {
   return (
     <Card className="w-full max-w-[26rem] shadow-lg">
       <CardHeader floated={false} color="blue-gray">
@@ -153,8 +153,8 @@ const PodcastCard = () => {
         </div>
       </CardBody>
       <CardFooter className="pt-3">
-        <Button size="lg" fullWidth={true}>
-          Reserve
+        <Button size="lg" fullWidth={true} className="bg-green-500">
+          Listen
         </Button>
       </CardFooter>
     </Card>

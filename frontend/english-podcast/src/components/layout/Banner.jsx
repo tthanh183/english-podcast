@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@material-tailwind/react";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 const Banner = () => {
   return (
     <div className="w-full h-[100vh] flex items-center justify-center bg-gradient-to-br from-green-500 to-gray-50 p-4 md:p-8">
@@ -13,11 +13,12 @@ const Banner = () => {
         </p>
         <p className="text-sm md:text-base lg:text-lg mb-6">
           Your ultimate destination for mastering English through engaging
-          podcasts, available on your web browser, smartphone, or desktop.
-          Learn anytime, anywhere—free of charge. Let your English skills
-          soar!
+          podcasts, available on your web browser, smartphone, or desktop. Learn
+          anytime, anywhere—free of charge. Let your English skills soar!
         </p>
-        <Button size="lg"><Link to={'/home'}>Let's get started</Link></Button>
+        <Link to="/home">
+          <Button size="lg">Let's get started</Button>
+        </Link>
       </div>
     </div>
   );

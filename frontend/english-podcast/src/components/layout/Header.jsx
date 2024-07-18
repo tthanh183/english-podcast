@@ -23,13 +23,13 @@ const Header = () => {
           Podcast
         </h1>
         <nav className="flex items-center space-x-8">
-          <Link to="/" className="text-white font-sans text-lg">
+          <Link to="/" className="text-black font-sans text-lg">
             Home
           </Link>
-          <Link to="/about" className="text-white font-sans text-lg">
+          <Link to="/about" className="text-black font-sans text-lg">
             About
           </Link>
-          <Link to="/contact" className="text-white font-sans text-lg">
+          <Link to="/contact" className="text-black font-sans text-lg">
             Contact
           </Link>
         </nav>
