@@ -6,7 +6,7 @@ import com.example.backend.exception.UserAlreadyExistsException;
 import com.example.backend.model.User;
 import com.example.backend.security.CustomUserDetails;
 import com.example.backend.security.JwtUtils;
-import com.example.backend.service.impl.UserService;
+import com.example.backend.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping("/api/auth")
 @CrossOrigin("*")
 public class AuthController {
-    private final UserService userService;
+    private final IUserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     @PostMapping("/register")

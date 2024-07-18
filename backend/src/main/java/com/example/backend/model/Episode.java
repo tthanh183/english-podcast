@@ -22,6 +22,7 @@ public class Episode {
     private String description;
     @Column(name = "date_create")
     private LocalDate createdDate;
+    private String url;
     private String script;
     private int duration;
     private String image;
@@ -35,11 +36,12 @@ public class Episode {
     @ManyToMany(mappedBy = "episodes", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Playlist> playlists;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "episode", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<FavoriteEpisode> favoriteEpisodes;
+
+    @OneToMany(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<History> histories;
 }
