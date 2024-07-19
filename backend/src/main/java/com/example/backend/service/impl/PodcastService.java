@@ -26,4 +26,19 @@ public class PodcastService implements IPodcastService {
         }
         return podcasts;
     }
+
+    @Override
+    public Podcast savePodcast(Podcast podcast) {
+        return podcastRepository.save(podcast);
+    }
+
+    @Override
+    public void deletePodcast(Podcast podcast) {
+        podcastRepository.delete(podcast);
+    }
+
+    @Override
+    public Podcast updatePodcast(Podcast podcast) {
+        return podcastRepository.save(podcast);
+    }
 }

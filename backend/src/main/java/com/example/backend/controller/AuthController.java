@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 @CrossOrigin("*")
 public class AuthController {
     private final IUserService userService;
