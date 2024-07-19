@@ -1,10 +1,10 @@
 import React from 'react';
-import LandingPage from '../components/home/LandingPage';
-import Login from '../components/auth/Login';
-import Logout from '../components/auth/Logout'
-import HomePage from '../components/home/HomePage';
-import Channel from '../components/channel/Channel';
-import EpisodeTable from '../components/channel/EpisodeTable'
+import LandingPage from '../pages/Landing/LandingPage';
+import Login from '../pages/Login/Login';
+import Logout from '../pages/Logout/Logout'
+import HomePage from '../pages/Home/HomePage';
+import Channel from '../pages/Channel/Channel';
+import EpisodeTable from '../pages/Episode/EpisodeTable'
 const routes = [
   {
     path: '/',

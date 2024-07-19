@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { handleImageUpload } from "../../firebase/handleUpload";
-import { getGenres } from "../../service/genre/GenreService";
-import { createPodcast } from "../../service/podcast/PodcastService";
+import { getGenres } from "../../services/genre/GenreService";
+import { updatePodcast } from "../../services/podcast/PodcastService";
 import { toast } from "react-toastify";
 import {
   Button,
@@ -15,7 +16,7 @@ import {
   Checkbox,
 } from "@material-tailwind/react";
 
-const PodcastCreate = ({ open, handleOpen }) => {
+const PodcastUpdate = ({ open, handleOpen, podcast }) => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -23,8 +24,8 @@ const PodcastCreate = ({ open, handleOpen }) => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
-    reset, // Reset method from react-hook-form
   } = useForm();
   const [selectedGenres, setSelectedGenres] = useState([]);
 
@@ -33,21 +34,21 @@ const PodcastCreate = ({ open, handleOpen }) => {
   }, []);
 
   useEffect(() => {
-    if (!open) {
-      // Reset form values when form is closed
-      reset({
-        title: '',
-        description: ''
-      });
-      setImage(null);
-      setImagePreview(null);
-      setSelectedGenres([]);
+    if (podcast) {
+      populateForm(podcast);
     }
-  }, [open, reset]);
+  }, [podcast]);
 
   const fetchData = async () => {
     const result = await getGenres();
     setGenres(result);
+  };
+
+  const populateForm = (podcast) => {
+    setValue("title", podcast.title);
+    setValue("description", podcast.description);
+    setImagePreview(podcast.image);
+    setSelectedGenres(podcast.genres);
   };
 
   const handleGenreChange = (event) => {
@@ -73,26 +74,28 @@ const PodcastCreate = ({ open, handleOpen }) => {
   const onSubmit = async (data) => {
     setUploading(true);
     try {
-      const imgUrl = await handleImageUpload(image);
+      let imgUrl = imagePreview;
+      if (image) {
+        imgUrl = await handleImageUpload(image);
+      }
 
       const date = new Date();
       const formData = {
         ...data,
         image: imgUrl,
-        star: 5,
-        createdDate: date,
+        star: podcast.star,
+        createdDate: podcast.createdDate,
         updatedDate: date,
         genres: selectedGenres,
       };
 
-      console.log("Form Data: ", formData);
-      const response = await createPodcast(formData);
+      const response = await updatePodcast(podcast.id, formData);
 
-      toast.success("Create podcast: " + response.title + " successfully!");
+      toast.success("Update podcast: " + response.title + " successfully");
       setUploading(false);
-      handleOpen(); // Close the form after successful submission
+      handleOpen();
     } catch (error) {
-      toast.error(error.message || "Error creating podcast");
+      toast.error(error);
       setUploading(false);
     }
   };
@@ -118,7 +121,7 @@ const PodcastCreate = ({ open, handleOpen }) => {
             variant="paragraph"
             color="black"
           >
-            Enter your new episode's information
+            Edit your episode's information
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-row justify-center gap-10">
@@ -162,6 +165,9 @@ const PodcastCreate = ({ open, handleOpen }) => {
                   label={genre.name}
                   value={genre.id}
                   onChange={handleGenreChange}
+                  checked={selectedGenres.some(
+                    (selectedGenre) => selectedGenre.id === genre.id
+                  )}
                 />
               ))}
             </div>
@@ -173,7 +179,7 @@ const PodcastCreate = ({ open, handleOpen }) => {
                 color="green"
                 disabled={uploading}
               >
-                {uploading ? "Uploading..." : "Submit"}
+                {uploading ? "Uploading..." : "Update"}
               </Button>
             </CardFooter>
           </form>
@@ -183,4 +189,4 @@ const PodcastCreate = ({ open, handleOpen }) => {
   );
 };
 
-export default PodcastCreate;
+export default PodcastUpdate;

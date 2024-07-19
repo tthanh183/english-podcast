@@ -1,5 +1,5 @@
 import React from "react";
-import SideBar from "../layout/SideBar";
+import SideBar from "./SideBar";
 
 import {
   Menu,
@@ -9,10 +9,8 @@ import {
   IconButton,
   Avatar,
   Typography,
-  ListItem,
-  ListItemPrefix,
 } from "@material-tailwind/react";
-import { ArrowUpIcon, HomeIcon } from "@heroicons/react/24/solid";
+
 
 const HomePage = () => {
   return (

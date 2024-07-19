@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../../contexts/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 const Logout = () => {
@@ -8,7 +8,7 @@ const Logout = () => {
 
   const handleLogout = () => {
     auth.handleLogout();
-    toast.success("Logout successfully!")
+    toast.success("Logout successfully!");
     navigate("/");
   };
 

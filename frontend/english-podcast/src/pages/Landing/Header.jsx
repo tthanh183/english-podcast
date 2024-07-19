@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../auth/AuthProvider";
+import { useAuth } from "../../contexts/AuthProvider";
 
 import {
   Menu,
@@ -11,7 +11,7 @@ import {
   Avatar,
   Typography,
 } from "@material-tailwind/react";
-import Logout from "../auth/Logout";
+import Logout from "../Logout/Logout";
 
 const Header = () => {
   const { user, handleLogout, isAuthenticated } = useAuth();

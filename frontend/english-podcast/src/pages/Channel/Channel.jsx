@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import ChannelSideBar from './ChannelSideBar'
 import Overview from "./Overview";
 import Statistic from "./Statistic";
-import PodcastTable from "./PodcastTable";
+import PodcastTable from "../Podcast/PodcastTable";
 
 const Channel = () => {
   const [activeContent, setActiveContent] = useState("podcast");

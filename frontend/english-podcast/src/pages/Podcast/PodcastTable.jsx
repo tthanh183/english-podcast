@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPodcasts, deletePodcast } from "../../service/podcast/PodcastService";
+import {
+  getPodcasts,
+  deletePodcast,
+} from "../../services/podcast/PodcastService.js";
 import {
   DocumentMagnifyingGlassIcon,
   PencilIcon,
@@ -26,17 +29,16 @@ import {
 import PodcastCreate from "./PodcastCreate.jsx";
 import PodcastUpdate from "./PodcastUpdate.jsx";
 import { toast } from "react-toastify";
-import { confirmAlert } from 'react-confirm-alert'; // Import react-confirm-alert
-import 'react-confirm-alert/src/react-confirm-alert.css'; // Import CSS for the alert
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const PodcastTable = () => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
   const [openUpdateForm, setOpenUpdateForm] = useState(false);
   const handleOpenCreateForm = () => {
     setOpenCreateForm(!openCreateForm);
-    
-  }
-  
+  };
+
   useEffect(() => {
     if (openCreateForm == false) {
       fetchData();
@@ -74,7 +76,7 @@ const PodcastTable = () => {
 
   const fetchData = async () => {
     const response = await getPodcasts();
-    if(response.length == 0) setPodcasts(null)
+    if (response.length == 0) setPodcasts(null);
     else setPodcasts(response);
     setIsLoading(false);
   };
@@ -90,31 +92,30 @@ const PodcastTable = () => {
   const handelEditClick = (podcast) => {
     setCurrentPodcast(podcast);
     setOpenUpdateForm(true);
-    
   };
 
   const handelDeleteClick = (id) => {
     confirmAlert({
-      title: 'Confirm Delete',
-      message: 'Are you sure you want to delete this podcast?',
+      title: "Confirm Delete",
+      message: "Are you sure you want to delete this podcast?",
       buttons: [
         {
-          label: 'Yes',
+          label: "Yes",
           onClick: async () => {
             try {
-              const data = await deletePodcast(id);              
+              const data = await deletePodcast(id);
               toast.success(data.message || "Podcast deleted successfully");
-              fetchData(); 
+              fetchData();
             } catch (error) {
               toast.error("An error occurred while deleting the podcast");
             }
-          }
+          },
         },
         {
-          label: 'No',
-          onClick: () => {} 
-        }
-      ]
+          label: "No",
+          onClick: () => {},
+        },
+      ],
     });
   };
 

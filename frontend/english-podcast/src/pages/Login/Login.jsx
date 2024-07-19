@@ -8,27 +8,32 @@ import {
   Typography,
 } from "@material-tailwind/react";
 
-import * as authenticationService from "../../service/auth/AuthenticationService";
+import * as authenticationService from "../../services/auth/AuthenticationService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../../contexts/AuthProvider";
 
 const Login = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const navigate = useNavigate();
   const auth = useAuth();
 
   const onSubmit = async (data) => {
     try {
       const userData = await authenticationService.login(data);
-      console.log(userData);
       if (userData) {
         auth.handleLogin(userData.token);
         toast.success("Login successfully!");
         navigate("/");
+      } else {
+        toast.error("Invalid credentials, please try again.");
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error("Login failed. Please check your credentials.");
     }
   };
 
@@ -36,12 +41,15 @@ const Login = () => {
     <div className="flex items-center justify-center mt-10">
       <Card color="transparent" shadow={false}>
         <Typography variant="h4" color="blue-gray">
-          Sign Up
+          Sign In
         </Typography>
         <Typography color="gray" className="mt-1 font-normal">
-          Nice to meet you! Enter your details to register.
+          Nice to meet you! Enter your details to log in.
         </Typography>
-        <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="mb-1 flex flex-col gap-6">
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Your Email
@@ -57,11 +65,13 @@ const Login = () => {
                 required: "This input is required.",
                 pattern: {
                   value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-                  message: "Not a valid email"
-                }
+                  message: "Not a valid email",
+                },
               })}
             />
-            {errors.email && <span className="text-green-500">{errors.email.message}</span>}
+            {errors.email && (
+              <span className="text-green-500">{errors.email.message}</span>
+            )}
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Password
             </Typography>
@@ -77,11 +87,13 @@ const Login = () => {
                 required: "This input is required",
                 maxLength: {
                   value: 50,
-                  message: "This input exceeded 50 characters"
-                }
+                  message: "This input exceeded 50 characters",
+                },
               })}
             />
-            {errors.password && <span className="text-green-500">{errors.password.message}</span>}
+            {errors.password && (
+              <span className="text-green-500">{errors.password.message}</span>
+            )}
           </div>
           <div className="flex flex-col gap-1">
             <Checkbox
@@ -100,20 +112,28 @@ const Login = () => {
                   </a>
                 </Typography>
               }
-              containerProps={{ className: "-ml-2.5" }}
+              containerProps={{ className: "custom-checkbox -ml-2.5" }}
               {...register("agreeToTerms", {
-                required: "You must agree to the terms and conditions"
+                required: "You must agree to the terms and conditions",
               })}
             />
-            {errors.agreeToTerms && <span className="text-green-500">{errors.agreeToTerms.message}</span>}
+            {errors.agreeToTerms && (
+              <span className="text-green-500">
+                {errors.agreeToTerms.message}
+              </span>
+            )}
           </div>
-          <Button type="submit" className="mt-6 bg-green-700 hover:bg-green-900" fullWidth>
-            Sign Up
+          <Button
+            type="submit"
+            className="mt-6 bg-green-700 hover:bg-green-900"
+            fullWidth
+          >
+            Sign In
           </Button>
           <Typography color="gray" className="mt-4 text-center font-normal">
-            Already have an account?{" "}
+            Don't have an account?{" "}
             <a href="#" className="font-medium text-gray-900">
-              Sign In
+              Sign Up
             </a>
           </Typography>
         </form>
