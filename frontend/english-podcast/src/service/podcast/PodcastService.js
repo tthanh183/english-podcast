@@ -30,10 +30,10 @@ export const createPodcast = async (podcast) => {
     }
 }
 
-export const updatePodcast = async (podcast) => {
+export const updatePodcast = async (id, podcast) => {
     try {
         const token = localStorage.getItem('token')
-        const response = await axios.put(`${baseURL}/api/podcasts/${podcast.id}`, podcast, {
+        const response = await axios.put(`${baseURL}/api/podcasts/${id}`, podcast, {
             headers: {
                 Authorization: 'Bearer ' + token
             }
@@ -44,10 +44,10 @@ export const updatePodcast = async (podcast) => {
     }
 }
 
-export const deletePodcast = async (podcast) => {
+export const deletePodcast = async (id) => {
     try {
         const token = localStorage.getItem('token')
-        const response = await axios.delete(`${baseURL}/api/podcasts/${podcast.id}`, {
+        const response = await axios.delete(`${baseURL}/api/podcasts/${id}`, {
             headers: {
                 Authorization: 'Bearer ' + token
             }

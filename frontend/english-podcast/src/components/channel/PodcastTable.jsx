@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPodcasts } from "../../service/podcast/PodcastService";
-import { DocumentMagnifyingGlassIcon, PencilIcon } from "@heroicons/react/24/solid";
+import { getPodcasts, deletePodcast } from "../../service/podcast/PodcastService";
+import {
+  DocumentMagnifyingGlassIcon,
+  PencilIcon,
+} from "@heroicons/react/24/solid";
 import {
   MagnifyingGlassIcon,
   ArrowUpTrayIcon,
@@ -20,14 +23,37 @@ import {
   Tooltip,
   Input,
 } from "@material-tailwind/react";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import PodcastForm from "./PodcastForm";
+import PodcastCreate from "./PodcastCreate.jsx";
+import PodcastUpdate from "./PodcastUpdate.jsx";
+import { toast } from "react-toastify";
+import { confirmAlert } from 'react-confirm-alert'; // Import react-confirm-alert
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import CSS for the alert
 
 const PodcastTable = () => {
-  const [open, setOpen] = React.useState(false);
+  const [openCreateForm, setOpenCreateForm] = useState(false);
+  const [openUpdateForm, setOpenUpdateForm] = useState(false);
+  const handleOpenCreateForm = () => {
+    setOpenCreateForm(!openCreateForm);
+    
+  }
   
-  const handleOpen = () => setOpen(!open);
+  useEffect(() => {
+    if (openCreateForm == false) {
+      fetchData();
+    }
+  }, [openCreateForm]);
+
+  const handleOpenUpdateForm = () => {
+    setOpenUpdateForm(!openUpdateForm);
+  };
+
+  useEffect(() => {
+    if (openUpdateForm == false) {
+      fetchData();
+    }
+  }, [openUpdateForm]);
+
+  const [currentPodcast, setCurrentPodcast] = useState(null);
 
   const [header] = useState([
     "Image",
@@ -48,12 +74,12 @@ const PodcastTable = () => {
 
   const fetchData = async () => {
     const response = await getPodcasts();
-    setPodcasts(response);
+    if(response.length == 0) setPodcasts(null)
+    else setPodcasts(response);
     setIsLoading(false);
   };
 
-  const handelClick = (podcast) => {
-    const id = podcast.id;
+  const handleViewClick = (id) => {
     navigate("/channel/podcast", {
       state: {
         id: id,
@@ -61,6 +87,36 @@ const PodcastTable = () => {
     });
   };
 
+  const handelEditClick = (podcast) => {
+    setCurrentPodcast(podcast);
+    setOpenUpdateForm(true);
+    
+  };
+
+  const handelDeleteClick = (id) => {
+    confirmAlert({
+      title: 'Confirm Delete',
+      message: 'Are you sure you want to delete this podcast?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              const data = await deletePodcast(id);              
+              toast.success(data.message || "Podcast deleted successfully");
+              fetchData(); 
+            } catch (error) {
+              toast.error("An error occurred while deleting the podcast");
+            }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => {} 
+        }
+      ]
+    });
+  };
 
   return (
     <div className="flex flex-col items-center space-y-4">
@@ -85,36 +141,50 @@ const PodcastTable = () => {
                   icon={<MagnifyingGlassIcon className="h-5 w-5" />}
                 />
               </div>
-              <Button className="flex items-center gap-3 bg-green-500" size="sm" onClick={handleOpen}>
+              <Button
+                className="flex items-center gap-3 bg-green-500"
+                size="sm"
+                onClick={handleOpenCreateForm}
+              >
                 <ArrowUpTrayIcon strokeWidth={2} className="h-4 w-4" /> Create
               </Button>
-              <PodcastForm open={open} handleOpen={handleOpen} />
+              <PodcastCreate
+                open={openCreateForm}
+                handleOpen={handleOpenCreateForm}
+              />
+              <PodcastUpdate
+                open={openUpdateForm}
+                handleOpen={handleOpenUpdateForm}
+                podcast={currentPodcast}
+              />
             </div>
           </div>
         </CardHeader>
         <CardBody className="px-0">
-          <table className="w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                {header.map((head) => (
-                  <th
-                    key={head}
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
+          {podcasts.length === 0 ? (
+            <p className="text-red-500 text-center">No data</p>
+          ) : (
+            <table className="w-full min-w-max table-auto text-left">
+              <thead>
+                <tr>
+                  {header.map((head) => (
+                    <th
+                      key={head}
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                     >
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {(
-                podcasts.map((podcast, index) => {
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+                      >
+                        {head}
+                      </Typography>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {podcasts.map((podcast, index) => {
                   const isLast = index === podcasts.length - 1;
                   const classes = isLast
                     ? "p-4"
@@ -142,8 +212,8 @@ const PodcastTable = () => {
                           </Typography>
                         </div>
                       </td>
-                      <td className={classes} >
-                        <div className="flex items-center gap-3">
+                      <td className={classes}>
+                        <div className="flex items-center gap-3 max-w-48">
                           <Typography
                             variant="small"
                             color="blue-gray"
@@ -185,27 +255,37 @@ const PodcastTable = () => {
                       </td>
                       <td className={classes}>
                         <Tooltip content="View Podcast">
-                          <IconButton variant="text" onClick={handelClick}>
+                          <IconButton
+                            variant="text"
+                            onClick={() => handleViewClick(podcast.id)}
+                          >
                             <DocumentMagnifyingGlassIcon className="h-4 w-4" />
                           </IconButton>
                         </Tooltip>
                         <Tooltip content="Edit Podcast">
-                          <IconButton variant="text" onClick={handelClick}>
+                          <IconButton
+                            variant="text"
+                            onClick={() => handelEditClick(podcast)}
+                          >
                             <PencilIcon className="h-4 w-4" />
                           </IconButton>
                         </Tooltip>
+
                         <Tooltip content="Delete Podcast">
-                          <IconButton variant="text" onClick={handelClick}>
+                          <IconButton
+                            variant="text"
+                            onClick={() => handelDeleteClick(podcast.id)}
+                          >
                             <TrashIcon className="h-4 w-4" />
                           </IconButton>
                         </Tooltip>
                       </td>
                     </tr>
                   );
-                })
-              )}
-            </tbody>
-          </table>
+                })}
+              </tbody>
+            </table>
+          )}
         </CardBody>
         <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
           <Button variant="outlined" size="sm">

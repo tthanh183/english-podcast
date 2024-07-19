@@ -5,7 +5,7 @@ import Statistic from "./Statistic";
 import PodcastTable from "./PodcastTable";
 
 const Channel = () => {
-  const [activeContent, setActiveContent] = useState("overview");
+  const [activeContent, setActiveContent] = useState("podcast");
 
   const renderContent = () => {
     switch (activeContent) {
@@ -16,7 +16,7 @@ const Channel = () => {
       case "podcast":
         return <PodcastTable/>;
       default:
-        return <Overview />;
+        return <PodcastTable/>;
     }
   };
 
