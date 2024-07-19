@@ -25,7 +25,7 @@ const Channel = () => {
         <ChannelSideBar setActiveContent={setActiveContent}/>
         <div className="flex-1 p-4">
           {renderContent()}
-      </div>
+        </div>
     </div>
   )
 }

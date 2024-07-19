@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   handleImageUpload,
   handleAudioUpload,
 } from "../../firebase/handleUpload";
-
+import {getGenres} from "../../service/genre/GenreService"
 import {
   Button,
   Dialog,
@@ -13,14 +13,35 @@ import {
   Typography,
   Input,
   Textarea,
+    Checkbox,
 } from "@material-tailwind/react";
 
-const EpisodeForm = ({ open, handleOpen }) => {
+const PodcastForm = ({ open, handleOpen }) => {
   const [audio, setAudio] = useState(null);
   const [image, setImage] = useState(null);
   const [audioPreview, setAudioPreview] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [genres, setGenres] = useState([])
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  const fetchData = async () => {
+    const result = await getGenres()
+    setGenres(result)
+  }
+  const handleChange = (event) => {
+    const { options } = event.target;
+    const selectedValues = [];
+    for (const option of options) {
+      if (option.selected) {
+        selectedValues.push(option.value);
+      }
+    }
+    setSelectedOptions(selectedValues);
+  };
 
   const handleAudioChange = (e) => {
     const file = e.target.files[0];
@@ -78,19 +99,10 @@ const EpisodeForm = ({ open, handleOpen }) => {
               <Typography variant="h6">Description</Typography>
               <Input label="Description" size="lg" color="green" />
 
-              <Typography variant="h6">Script</Typography>
-              <Textarea label="Script" size="lg" color="green"/>
+              {/* <Typography variant="h6">Script</Typography>
+              <Textarea label="Script" size="lg" color="green"/> */}
             </div>
-            <div className="flex flex-col gap-4 w-3/5">
-              <Typography variant="h6">Audio</Typography>
-              <input type="file" onChange={(e) => handleAudioChange(e)} />
-              {audioPreview && (
-                <audio controls className="mt-2">
-                  <source src={audioPreview} type="audio/mpeg" />
-                  Your browser does not support the audio element.
-                </audio>
-              )}
-
+            <div className="flex flex-col gap-4 w-3/5">                   
               <Typography variant="h6">Image</Typography>
               <input type="file" onChange={(e) => handleImageChange(e)} />
               {imagePreview && (
@@ -102,6 +114,14 @@ const EpisodeForm = ({ open, handleOpen }) => {
               )}
             </div>
           </div>
+          
+          <Typography variant="h6">Genre</Typography>
+          <div className="flex flex-wrap gap-4 justify-between ">
+          {genres.map((genre) => (
+            <Checkbox color="green" label={genre.name} className="max-w-20" />
+          ))}
+          </div>
+          
         </CardBody>
         <CardFooter className="flex flex-col items-center pt-6">
           <Button
@@ -118,4 +138,4 @@ const EpisodeForm = ({ open, handleOpen }) => {
   );
 };
 
-export default EpisodeForm;
+export default PodcastForm;
