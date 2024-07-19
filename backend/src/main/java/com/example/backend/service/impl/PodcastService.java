@@ -41,4 +41,9 @@ public class PodcastService implements IPodcastService {
     public Podcast updatePodcast(Podcast podcast) {
         return podcastRepository.save(podcast);
     }
+
+    @Override
+    public Podcast findPodcastById(Long id) {
+        return podcastRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Podcast not exist with id: " + id));
+    }
 }

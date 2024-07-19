@@ -20,6 +20,6 @@ public class Genre {
     private String name;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "genres", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Podcast> podcasts;
 }

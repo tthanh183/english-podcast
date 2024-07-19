@@ -1,8 +1,10 @@
 package com.example.backend.controller;
 
 import com.example.backend.exception.ResourceNotFoundException;
+import com.example.backend.model.Genre;
 import com.example.backend.model.Podcast;
 import com.example.backend.model.User;
+import com.example.backend.service.IGenreService;
 import com.example.backend.service.IPodcastService;
 import com.example.backend.service.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,6 +26,7 @@ import java.util.List;
 public class PodcastController {
     private final IPodcastService podcastService;
     private final IUserService userService;
+    private final IGenreService genreService;
     @GetMapping()
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> findAllPodcasts() {
@@ -39,25 +43,64 @@ public class PodcastController {
         }
     }
     @PostMapping()
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createPodcast(@RequestBody Podcast podcast) {
         if (podcast == null) {
             return new ResponseEntity<>("Podcast cannot be null", HttpStatus.BAD_REQUEST);
         }
+
+        List<Genre> managedGenres = new ArrayList<>();
+        for (Genre genre : podcast.getGenres()) {
+            Genre managedGenre = genreService.findById(genre.getId());
+            if (managedGenre != null) {
+                managedGenres.add(managedGenre);
+            }
+        }
+        podcast.setGenres(managedGenres);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userService.findUserByEmail(userDetails.getUsername());
+        podcast.setUser(user);
         Podcast savedPodcast = podcastService.savePodcast(podcast);
         return new ResponseEntity<>(savedPodcast, HttpStatus.CREATED);
     }
-    @PutMapping("/:id")
-    public ResponseEntity<?> updatePodcast(@RequestBody Podcast podcast) {
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> updatePodcast(@PathVariable Long id ,@RequestBody Podcast podcast) {
         if (podcast == null) {
             return new ResponseEntity<>("Podcast cannot be null", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(podcastService.updatePodcast(podcast), HttpStatus.OK);
-    }
-    @DeleteMapping("/:id")
-    public ResponseEntity<?> deletePodcast(@RequestBody Podcast podcast) {
-        if (podcast == null) {
-            return new ResponseEntity<>("Podcast cannot be null", HttpStatus.BAD_REQUEST);
+        Podcast savedPodcast;
+        try {
+            Podcast updatedPodcast = podcastService.findPodcastById(id);
+
+            updatedPodcast.setTitle(podcast.getTitle());
+            updatedPodcast.setDescription(podcast.getDescription());
+            updatedPodcast.setGenres(podcast.getGenres());
+            updatedPodcast.setImage(podcast.getImage());
+            updatedPodcast.setUpdatedDate(podcast.getUpdatedDate());
+
+            savedPodcast = podcastService.savePodcast(updatedPodcast);
+            return new ResponseEntity<>(savedPodcast, HttpStatus.OK);
+
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error when updating podcast", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>("Delete podcast successfully", HttpStatus.OK);
     }
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> deletePodcast(@PathVariable Long id) {
+        try {
+            Podcast podcast = podcastService.findPodcastById(id);
+            podcastService.deletePodcast(podcast);
+            return new ResponseEntity<>("Delete podcast successfully", HttpStatus.OK);
+        }catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 }

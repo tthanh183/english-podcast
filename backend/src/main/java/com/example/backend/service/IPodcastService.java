@@ -10,4 +10,6 @@ public interface IPodcastService {
     Podcast savePodcast(Podcast podcast);
     void deletePodcast(Podcast podcast);
     Podcast updatePodcast(Podcast podcast);
+
+    Podcast findPodcastById(Long id);
 }

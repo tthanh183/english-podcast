@@ -1,5 +1,6 @@
 package com.example.backend.service.impl;
 
+import com.example.backend.exception.ResourceNotFoundException;
 import com.example.backend.model.Genre;
 import com.example.backend.repository.IGenreRepository;
 import com.example.backend.service.IGenreService;
@@ -16,5 +17,10 @@ public class GenreService implements IGenreService {
     @Override
     public List<Genre> getAllGenres() {
         return genreRepository.findAll();
+    }
+
+    @Override
+    public Genre findById(Long id) {
+        return genreRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Genre not found"));
     }
 }
