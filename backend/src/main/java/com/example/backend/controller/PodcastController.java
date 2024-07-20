@@ -107,17 +107,4 @@ public class PodcastController {
         }
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<?> findPodcastsByTitle(@RequestParam String title) {
-        try {
-            List<Podcast> podcasts = podcastService.findPodcastsByTitle(title);
-            return new ResponseEntity<>(podcasts, HttpStatus.OK);
-        }catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }catch (Exception e) {
-            return new ResponseEntity<>("Error when searching podcasts", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
 }

@@ -8,11 +8,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface IPodcastService {
-    List<Podcast> findPodcastsByUser(User user);
     Podcast savePodcast(Podcast podcast);
     void deletePodcast(Podcast podcast);
-    Podcast updatePodcast(Podcast podcast);
     Podcast findPodcastById(Long id);
-    List<Podcast> findPodcastsByTitle(String title);
     Page<Podcast> findPodcastsByUserAndTitleContaining(User user, String search, Pageable pageable);
 }
