@@ -8,6 +8,9 @@ import com.example.backend.service.IGenreService;
 import com.example.backend.service.IPodcastService;
 import com.example.backend.service.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,12 +32,14 @@ public class PodcastController {
     private final IGenreService genreService;
     @GetMapping()
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> findAllPodcasts() {
+    public ResponseEntity<?> findAllPodcasts(@RequestParam int page, @RequestParam String search) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             User user = userService.findUserByEmail(userDetails.getUsername());
-            List<Podcast> podcasts = podcastService.findPodcastByUser(user);
+
+            Pageable pageable = PageRequest.of(page,4);
+            Page<Podcast> podcasts = podcastService.findPodcastsByUserAndTitleContaining(user,search,   pageable);
             return new ResponseEntity<>(podcasts, HttpStatus.OK);
         }catch (ResourceNotFoundException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -99,6 +104,18 @@ public class PodcastController {
             return new ResponseEntity<>("Delete podcast successfully", HttpStatus.OK);
         }catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> findPodcastsByTitle(@RequestParam String title) {
+        try {
+            List<Podcast> podcasts = podcastService.findPodcastsByTitle(title);
+            return new ResponseEntity<>(podcasts, HttpStatus.OK);
+        }catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (Exception e) {
+            return new ResponseEntity<>("Error when searching podcasts", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

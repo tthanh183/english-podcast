@@ -2,14 +2,17 @@ package com.example.backend.service;
 
 import com.example.backend.model.Podcast;
 import com.example.backend.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface IPodcastService {
-    List<Podcast> findPodcastByUser(User user);
+    List<Podcast> findPodcastsByUser(User user);
     Podcast savePodcast(Podcast podcast);
     void deletePodcast(Podcast podcast);
     Podcast updatePodcast(Podcast podcast);
-
     Podcast findPodcastById(Long id);
+    List<Podcast> findPodcastsByTitle(String title);
+    Page<Podcast> findPodcastsByUserAndTitleContaining(User user, String search, Pageable pageable);
 }
