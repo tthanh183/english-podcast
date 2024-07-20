@@ -1,16 +1,9 @@
-import axios from 'axios'
-
-const baseURL = "http://localhost:8080";
+import axiosInstance from '../../utils/axiosInstance';
 
 export const getGenres = async () => {
     try {
-        const token = localStorage.getItem('token')
-        const response = await axios.get(`${baseURL}/api/genres`, {
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        })
-        return response.data
+        const response = await axiosInstance.get('/genres');
+        return response.data;
     } catch (error) {
         console.log(error);
     }

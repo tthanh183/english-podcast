@@ -1,14 +1,8 @@
-import axios from 'axios'
-
-const baseURL = "http://localhost:8080";
+import axiosInstance from '../../utils/axiosInstance';
 
 export const getPodcasts = async (page, search = "") => {
     try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${baseURL}/api/podcasts`, {
-            headers: {
-                Authorization: 'Bearer ' + token
-            },
+        const response = await axiosInstance.get('/podcasts', {
             params: {
                 page: page - 1,
                 search: search,
@@ -22,28 +16,17 @@ export const getPodcasts = async (page, search = "") => {
 
 export const getPodcastById = async (id) => {
     try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${baseURL}/api/podcasts/${id}`, {
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        });
+        const response = await axiosInstance.get(`/podcasts/${id}`);
         return response.data;
     } catch (error) {
         console.log(error);
     }
 }
 
-
 export const createPodcast = async (podcast) => {
     try {
-        const token = localStorage.getItem('token')
-        const response = await axios.post(`${baseURL}/api/podcasts`, podcast, {
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        })
-        return response.data
+        const response = await axiosInstance.post('/podcasts', podcast);
+        return response.data;
     } catch (error) {
         console.log(error);
     }
@@ -51,13 +34,8 @@ export const createPodcast = async (podcast) => {
 
 export const updatePodcast = async (id, podcast) => {
     try {
-        const token = localStorage.getItem('token')
-        const response = await axios.put(`${baseURL}/api/podcasts/${id}`, podcast, {
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        })
-        return response.data
+        const response = await axiosInstance.put(`/podcasts/${id}`, podcast);
+        return response.data;
     } catch (error) {
         console.log(error);
     }
@@ -65,13 +43,8 @@ export const updatePodcast = async (id, podcast) => {
 
 export const deletePodcast = async (id) => {
     try {
-        const token = localStorage.getItem('token')
-        const response = await axios.delete(`${baseURL}/api/podcasts/${id}`, {
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        })
-        return response.data
+        const response = await axiosInstance.delete(`/podcasts/${id}`);
+        return response.data;
     } catch (error) {
         console.log(error);
     }
