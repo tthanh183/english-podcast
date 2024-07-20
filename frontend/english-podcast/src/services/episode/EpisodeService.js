@@ -2,10 +2,10 @@ import axios from 'axios'
 
 const baseURL = "http://localhost:8080";
 
-export const getPodcasts = async (page, search = "") => {
+export const getEpisodes = async (id, page, search = "") => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${baseURL}/api/podcasts`, {
+        const response = await axios.get(`${baseURL}/api/podcasts/${id}/episodes`, {
             headers: {
                 Authorization: 'Bearer ' + token
             },
@@ -20,25 +20,10 @@ export const getPodcasts = async (page, search = "") => {
     }
 }
 
-export const getPodcastById = async (id) => {
-    try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${baseURL}/api/podcasts/${id}`, {
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        });
-        return response.data;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-export const createPodcast = async (podcast) => {
+export const createEpisode = async (id, episode) => {
     try {
         const token = localStorage.getItem('token')
-        const response = await axios.post(`${baseURL}/api/podcasts`, podcast, {
+        const response = await axios.post(`${baseURL}/api/podcasts/${id}/episodes`, episode, {
             headers: {
                 Authorization: 'Bearer ' + token
             }
@@ -49,10 +34,11 @@ export const createPodcast = async (podcast) => {
     }
 }
 
-export const updatePodcast = async (id, podcast) => {
+export const updateEpisode = async (podcastId,episodeId, episode) => {
     try {
         const token = localStorage.getItem('token')
-        const response = await axios.put(`${baseURL}/api/podcasts/${id}`, podcast, {
+        const response = await axios.put(`${baseURL}/api/podcasts/${podcastId}/episodes/${episodeId}`
+        ,episode, {
             headers: {
                 Authorization: 'Bearer ' + token
             }
@@ -63,10 +49,10 @@ export const updatePodcast = async (id, podcast) => {
     }
 }
 
-export const deletePodcast = async (id) => {
+export const deleteEpisode = async (podcastId,episodeId) => {
     try {
         const token = localStorage.getItem('token')
-        const response = await axios.delete(`${baseURL}/api/podcasts/${id}`, {
+        const response = await axios.delete(`${baseURL}/api/podcasts/${podcastId}/episodes/${episodeId}`, {
             headers: {
                 Authorization: 'Bearer ' + token
             }

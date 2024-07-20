@@ -1,64 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { useForm } from "react-hook-form";
-import { handleImageUpload } from "../../firebase/handleUpload";
-import { getGenres } from "../../services/genre/GenreService";
-import { createPodcast } from "../../services/podcast/PodcastService";
+import { Dialog, DialogHeader, DialogBody, DialogFooter, Card, CardBody, CardFooter, Typography, Button, Input, Textarea } from "@material-tailwind/react";
+import { updateEpisode } from "../../services/episode/EpisodeService.js";
 import { toast } from "react-toastify";
-import {
-  Button,
-  Dialog,
-  Card,
-  CardBody,
-  CardFooter,
-  Typography,
-  Input,
-  Checkbox,
-} from "@material-tailwind/react";
+import { handleAudioUpload, handleImageUpload } from '../../firebase/handleUpload.js';
 
-const PodcastCreate = ({ open, handleOpen }) => {
+const EpisodeUpdate = ({ open, handleOpen, episode, podcastId }) => {
+  const [audio, setAudio] = useState(null);
   const [image, setImage] = useState(null);
+  const [audioPreview, setAudioPreview] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [genres, setGenres] = useState([]);
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
-    reset, // Reset method from react-hook-form
   } = useForm();
-  const [selectedGenres, setSelectedGenres] = useState([]);
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (!open) {
-      // Reset form values when form is closed
-      reset({
-        title: "",
-        description: "",
-      });
-      setImage(null);
-      setImagePreview(null);
-      setSelectedGenres([]);
+    if (episode) {
+      populateForm(episode);
     }
-  }, [open, reset]);
+  }, [episode]);
 
-  const fetchData = async () => {
-    const result = await getGenres();
-    setGenres(result);
-  };
-
-  const handleGenreChange = (event) => {
-    const { value, checked } = event.target;
-    const selectedGenre = genres.find((genre) => genre.id.toString() === value);
-
-    setSelectedGenres((prevSelectedGenres) =>
-      checked
-        ? [...prevSelectedGenres, selectedGenre]
-        : prevSelectedGenres.filter((genre) => genre.id.toString() !== value)
-    );
+  const populateForm = (episode) => {
+    setValue("title", episode.title);
+    setValue("description", episode.description);
+    setValue("script", episode.script);
+    setImagePreview(episode.image);
+    setAudioPreview(episode.url);
   };
 
   const handleImageChange = (e) => {
@@ -70,29 +41,43 @@ const PodcastCreate = ({ open, handleOpen }) => {
     }
   };
 
+  const handleAudioChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAudio(file);
+      const audioURL = URL.createObjectURL(file);
+      setAudioPreview(audioURL);
+    }
+  };
+
   const onSubmit = async (data) => {
     setUploading(true);
     try {
-      const imgUrl = await handleImageUpload(image);
+      let imgUrl = imagePreview;
+      if (image) {
+        imgUrl = await handleImageUpload(image);
+      }
+      let audioUrl = audioPreview;
+      if (audio) {
+        audioUrl = await handleAudioUpload(audio);
+      }
 
       const date = new Date();
       const formData = {
         ...data,
         image: imgUrl,
-        star: 5,
-        createdDate: date,
+        url: audioUrl,
+        createdDate: episode.createdDate,
         updatedDate: date,
-        genres: selectedGenres,
       };
 
-      console.log("Form Data: ", formData);
-      const response = await createPodcast(formData);
+      const response = await updateEpisode(podcastId, episode.id, formData);
 
-      toast.success("Create podcast: " + response.title + " successfully!");
+      toast.success("Update podcast: " + response.title + " successfully");
       setUploading(false);
-      handleOpen(); // Close the form after successful submission
+      handleOpen();
     } catch (error) {
-      toast.error(error.message || "Error creating podcast");
+      toast.error(error.message || "An error occurred");
       setUploading(false);
     }
   };
@@ -111,14 +96,14 @@ const PodcastCreate = ({ open, handleOpen }) => {
             color="green"
             className="text-center text-green-700"
           >
-            Podcast Information
+            Episode Information
           </Typography>
           <Typography
             className="mb-4 font-normal text-center"
             variant="paragraph"
             color="black"
           >
-            Enter your new episode's information
+            Edit your episode's information
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-row justify-center gap-10">
@@ -128,19 +113,38 @@ const PodcastCreate = ({ open, handleOpen }) => {
                   label="Title"
                   size="lg"
                   color="green"
-                  {...register("title", { required: "Title is required" })}
+                  {...register("title", { required: true })}
                 />
-                {errors.title && <span>{errors.title.message}</span>}
+                {errors.title && <span className="text-green-500">Title is required</span>}
 
                 <Typography variant="h6">Description</Typography>
                 <Input
                   label="Description"
                   size="lg"
                   color="green"
-                  {...register("description")}
+                  {...register("description", { required: true })}
                 />
+                {errors.description && <span className="text-green-500">Description is required</span>}
+
+                <Typography variant="h6">Script</Typography>
+                <Textarea
+                  label="Script"
+                  size="lg"
+                  color="green"
+                  {...register("script", { required: true })}
+                />
+                {errors.script && <span className="text-green-500">Script is required</span>}
               </div>
               <div className="flex flex-col gap-4 w-3/5">
+                <Typography variant="h6">Audio</Typography>
+                <input type="file" onChange={handleAudioChange} />
+                {audioPreview && (
+                  <audio controls className="mt-2">
+                    <source src={audioPreview} type="audio/mpeg" />
+                    Your browser does not support the audio element.
+                  </audio>
+                )}
+
                 <Typography variant="h6">Image</Typography>
                 <input type="file" onChange={handleImageChange} />
                 {imagePreview && (
@@ -151,19 +155,6 @@ const PodcastCreate = ({ open, handleOpen }) => {
                   />
                 )}
               </div>
-            </div>
-
-            <Typography variant="h6">Genre</Typography>
-            <div className="flex flex-wrap gap-4 justify-between">
-              {genres.map((genre) => (
-                <Checkbox
-                  key={genre.id}
-                  color="green"
-                  label={genre.name}
-                  value={genre.id}
-                  onChange={handleGenreChange}
-                />
-              ))}
             </div>
             <CardFooter className="flex flex-col items-center pt-6">
               <Button
@@ -183,4 +174,4 @@ const PodcastCreate = ({ open, handleOpen }) => {
   );
 };
 
-export default PodcastCreate;
+export default EpisodeUpdate;

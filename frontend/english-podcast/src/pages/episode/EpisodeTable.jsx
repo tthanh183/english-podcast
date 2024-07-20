@@ -1,58 +1,79 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getPodcasts, deletePodcast } from "../../services/podcast/PodcastService.js";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getEpisodes, deleteEpisode } from "../../services/episode/EpisodeService.js";
 import { DocumentMagnifyingGlassIcon, PencilIcon } from "@heroicons/react/24/solid";
 import { ArrowUpTrayIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Card, CardHeader, Typography, Button, CardBody, Chip, CardFooter, IconButton, Tooltip } from "@material-tailwind/react";
-import PodcastCreate from "./PodcastCreate.jsx";
-import PodcastUpdate from "./PodcastUpdate.jsx";
+import EpisodeCreate from "./EpisodeCreate.jsx";
+import EpisodeUpdate from "./EpisodeUpdate.jsx";
 import { toast } from "react-toastify";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import Filter from "../../components/common/Filter.jsx";
-import Paginator from "../../components/common/Paginator.jsx";
+import Filter from "../../components/Filter/Filter.jsx";
+import Paginator from "../../components/Paginator/Paginator.jsx"
+import { getPodcastById, getPodcasts } from "../../services/podcast/PodcastService.js";
+import { formatDuration } from "../../utils/formatDuration.js";
 
-const PodcastTable = () => {
+const EpisodeTable = () => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
   const [openUpdateForm, setOpenUpdateForm] = useState(false);
-  const [currentPodcast, setCurrentPodcast] = useState(null);
+  const [currentEpisode, setCurrentEpisode] = useState(null);
   const [header] = useState([
     "Image",
-    "Description",
     "Title",
+    "Description",
+    "Audio",
     "Last update",
-    "Star",
-    "Genre",
+    "Duration",
     "",
   ]);
-  const [podcasts, setPodcasts] = useState([]);
-  const [filteredPodcasts, setFilteredPodcasts] = useState([]);
+  
+  const [podcast, setPodcast] = useState(null);
+  const [episodes, setEpisodes] = useState([]);
+  const [filteredEpisodes, setFilteredEpisodes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
+  const location = useLocation()
+  const podcastId = location.state?.id
+
+  useEffect(() => {
+    if(podcastId) {
+      fetchPodcast(podcastId)
+    }
+  },[podcastId])
+
+  const fetchPodcast = async (podcastId) => {
+    try {
+      const response = await getPodcastById(podcastId);
+      if (response) {
+        setPodcast(response);
+      }
+    } catch (error) {
+      console.error("Error fetching podcast:", error);
+    }
+  };
 
   useEffect(() => {
     fetchData(currentPage);
   }, [currentPage]);
 
   useEffect(() => {
-    if(openCreateForm == false) {
+    if (!openCreateForm || !openUpdateForm) {
       fetchData(currentPage);
     }
-    if(openUpdateForm == false) {
-      fetchData(currentPage);
-    }
-  },[openCreateForm, openUpdateForm])
+  }, [openCreateForm, openUpdateForm]);
+
   const fetchData = async (page, searchQuery = "") => {
     setIsLoading(true);
-    const response = await getPodcasts(page, searchQuery); // Pass searchQuery to API call
+    const response = await getEpisodes(podcastId,page, searchQuery); 
     if (response.length === 0) {
-      setPodcasts([]);
-      setFilteredPodcasts([]);
+      setEpisodes([]);
+      setFilteredEpisodes([]);
     } else {
-      setPodcasts(response.content);
-      setFilteredPodcasts(response.content);
+      setEpisodes(response.content);
+      setFilteredEpisodes(response.content);
     }
     setTotalPages(response.totalPages);
     setIsLoading(false);
@@ -74,25 +95,25 @@ const PodcastTable = () => {
     setOpenUpdateForm(!openUpdateForm);
   };
 
-  const handleEditClick = (podcast) => {
-    setCurrentPodcast(podcast);
+  const handleEditClick = (episode) => {
+    setCurrentEpisode(episode);
     setOpenUpdateForm(true);
   };
 
   const handleDeleteClick = (id) => {
     confirmAlert({
       title: "Confirm Delete",
-      message: "Are you sure you want to delete this podcast?",
+      message: "Are you sure you want to delete this episode?",
       buttons: [
         {
           label: "Yes",
           onClick: async () => {
             try {
-              const data = await deletePodcast(id);
-              toast.success(data.message || "Podcast deleted successfully");
+              const data = await deleteEpisode(podcastId,id);
+              toast.success(data.message || "Episode deleted successfully");
               fetchData(currentPage);
             } catch (error) {
-              toast.error("An error occurred while deleting the podcast");
+              toast.error("An error occurred while deleting the episode");
             }
           },
         },
@@ -115,7 +136,7 @@ const PodcastTable = () => {
   return (
     <div className="flex flex-col items-center space-y-4">
       <h2 className="text-center font-bold text-green-900 text-3xl">
-        Manage Your Podcast Channel
+        {podcast ? podcast.title: isLoading}
       </h2>
       <Card className="h-full w-full">
         <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -129,20 +150,22 @@ const PodcastTable = () => {
               >
                 <ArrowUpTrayIcon strokeWidth={2} className="h-4 w-4" /> Create
               </Button>
-              <PodcastCreate
+              <EpisodeCreate
                 open={openCreateForm}
                 handleOpen={handleOpenCreateForm}
+                podcastId={podcastId}
               />
-              <PodcastUpdate
+              <EpisodeUpdate
                 open={openUpdateForm}
                 handleOpen={handleOpenUpdateForm}
-                podcast={currentPodcast}
+                episode={currentEpisode}
+                podcastId={podcastId}
               />
             </div>
           </div>
         </CardHeader>
         <CardBody className="px-0">
-          {(podcasts && podcasts.length === 0) || !podcasts ? (
+          {(episodes && episodes.length === 0) || !episodes ? (
             <p className="text-green-500 text-center">No data</p>
           ) : (
             <table className="w-full min-w-max table-auto text-left">
@@ -165,19 +188,19 @@ const PodcastTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredPodcasts.map((podcast, index) => {
-                  const isLast = index === filteredPodcasts.length - 1;
+                {filteredEpisodes.map((episode, index) => {
+                  const isLast = index === filteredEpisodes.length - 1;
                   const classes = isLast
                     ? "p-4"
                     : "p-4 border-b border-blue-gray-50";
 
                   return (
-                    <tr key={podcast.id}>
+                    <tr key={episode.id}>
                       <td className={classes}>
                         <div className="flex items-center gap-3 w-60">
                           <img
                             className="h-full w-full object-cover object-center"
-                            src={podcast.image}
+                            src={episode.image}
                             alt="nature image"
                           />
                         </div>
@@ -189,7 +212,7 @@ const PodcastTable = () => {
                             color="blue-gray"
                             className="font-bold"
                           >
-                            {podcast.title}
+                            {episode.title}
                           </Typography>
                         </div>
                       </td>
@@ -200,7 +223,7 @@ const PodcastTable = () => {
                             color="blue-gray"
                             className="font-bold"
                           >
-                            {podcast.description}
+                            {episode.description}
                           </Typography>
                         </div>
                       </td>
@@ -209,8 +232,12 @@ const PodcastTable = () => {
                           variant="small"
                           color="blue-gray"
                           className="font-normal"
-                        >
-                          {podcast.updatedDate}
+                        >    
+                        <audio controls className="mt-2">
+                    <source src={episode.url} type="audio/mpeg" />
+                    Your browser does not support the audio element.
+                  </audio>     
+                          
                         </Typography>
                       </td>
                       <td className={classes}>
@@ -219,37 +246,25 @@ const PodcastTable = () => {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {podcast.star}
+                           {episode.updatedDate}
                         </Typography>
                       </td>
                       <td className={classes}>
-                        <div className="flex flex-col gap-2">
-                          {podcast.genres.map((genre, index) => (
-                            <Chip
-                              key={index}
-                              variant="ghost"
-                              value={genre.name}
-                              className="w-max"
-                            />
-                          ))}
-                        </div>
+                      <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                           {formatDuration(episode.duration)}
+                        </Typography>
                       </td>
                       <td className={classes}>
                         <div className="flex gap-2">
-                          <Tooltip content="View">
-                            <IconButton
-                              variant="text"
-                              color="green"
-                              onClick={() => handleViewClick(podcast.id)}
-                            >
-                              <DocumentMagnifyingGlassIcon className="h-5 w-5" />
-                            </IconButton>
-                          </Tooltip>
                           <Tooltip content="Edit">
                             <IconButton
                               variant="text"
                               color="blue"
-                              onClick={() => handleEditClick(podcast)}
+                              onClick={() => handleEditClick(episode)}
                             >
                               <PencilIcon className="h-5 w-5" />
                             </IconButton>
@@ -258,7 +273,7 @@ const PodcastTable = () => {
                             <IconButton
                               variant="text"
                               color="red"
-                              onClick={() => handleDeleteClick(podcast.id)}
+                              onClick={() => handleDeleteClick(episode.id)}
                             >
                               <TrashIcon className="h-5 w-5" />
                             </IconButton>
@@ -284,4 +299,4 @@ const PodcastTable = () => {
   );
 };
 
-export default PodcastTable;
+export default EpisodeTable;

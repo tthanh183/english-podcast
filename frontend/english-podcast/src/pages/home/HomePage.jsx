@@ -15,7 +15,7 @@ import {
 const HomePage = () => {
   return (
     <div className="flex ">
-      <div className>
+      <div>
         <SideBar />
       </div>
       <div className="container p-4">

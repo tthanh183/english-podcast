@@ -11,7 +11,7 @@ import {
   Avatar,
   Typography,
 } from "@material-tailwind/react";
-import Logout from "../Logout/Logout";
+import Logout from "../logout/Logout";
 
 const Header = () => {
   const { user, handleLogout, isAuthenticated } = useAuth();
