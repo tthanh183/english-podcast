@@ -17,7 +17,7 @@ import {
 const ChannelSideBar = ({setActiveContent}) => {
   return (
     <div>
-      <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
+      <Card className="h-full w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
         <div className="mb-2 p-4">
           <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" className="w-40 h-40" />
         </div>

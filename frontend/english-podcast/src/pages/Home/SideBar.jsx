@@ -47,7 +47,9 @@ const SideBar = () => {
             <ListItemPrefix>
               <GrChannel className="h-5 w-5 cursor-pointer" />
             </ListItemPrefix>
-            <Link to={'/channel'}>Channel</Link>
+            <Link to={'/channel'}>
+            Channel
+            </Link>
           </ListItem>
           <ListItem>
             <ListItemPrefix>

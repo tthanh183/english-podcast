@@ -1,62 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  getPodcasts,
-  deletePodcast,
-} from "../../services/podcast/PodcastService.js";
-import {
-  DocumentMagnifyingGlassIcon,
-  PencilIcon,
-} from "@heroicons/react/24/solid";
-import {
-  MagnifyingGlassIcon,
-  ArrowUpTrayIcon,
-  TrashIcon,
-  PlusIcon,
-} from "@heroicons/react/24/outline";
-import {
-  Card,
-  CardHeader,
-  Typography,
-  Button,
-  CardBody,
-  Chip,
-  CardFooter,
-  IconButton,
-  Tooltip,
-  Input,
-} from "@material-tailwind/react";
+import { getPodcasts, deletePodcast } from "../../services/podcast/PodcastService.js";
+import { DocumentMagnifyingGlassIcon, PencilIcon } from "@heroicons/react/24/solid";
+import { ArrowUpTrayIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { Card, CardHeader, Typography, Button, CardBody, Chip, CardFooter, IconButton, Tooltip } from "@material-tailwind/react";
 import PodcastCreate from "./PodcastCreate.jsx";
 import PodcastUpdate from "./PodcastUpdate.jsx";
 import { toast } from "react-toastify";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import Filter from "../../components/common/Filter.jsx";
+import Paginator from "../../components/common/Paginator.jsx";
 
 const PodcastTable = () => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
   const [openUpdateForm, setOpenUpdateForm] = useState(false);
-  const handleOpenCreateForm = () => {
-    setOpenCreateForm(!openCreateForm);
-  };
-
-  useEffect(() => {
-    if (openCreateForm == false) {
-      fetchData();
-    }
-  }, [openCreateForm]);
-
-  const handleOpenUpdateForm = () => {
-    setOpenUpdateForm(!openUpdateForm);
-  };
-
-  useEffect(() => {
-    if (openUpdateForm == false) {
-      fetchData();
-    }
-  }, [openUpdateForm]);
-
   const [currentPodcast, setCurrentPodcast] = useState(null);
-
   const [header] = useState([
     "Image",
     "Description",
@@ -67,17 +26,35 @@ const PodcastTable = () => {
     "",
   ]);
   const [podcasts, setPodcasts] = useState([]);
-  const navigate = useNavigate();
+  const [filteredPodcasts, setFilteredPodcasts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(currentPage);
+  }, [currentPage]);
 
-  const fetchData = async () => {
-    const response = await getPodcasts();
-    if (response.length == 0) setPodcasts(null);
-    else setPodcasts(response);
+  useEffect(() => {
+    if(openCreateForm == false) {
+      fetchData(currentPage);
+    }
+    if(openUpdateForm == false) {
+      fetchData(currentPage);
+    }
+  },[openCreateForm, openUpdateForm])
+  const fetchData = async (page, searchQuery = "") => {
+    setIsLoading(true);
+    const response = await getPodcasts(page, searchQuery); // Pass searchQuery to API call
+    if (response.length === 0) {
+      setPodcasts([]);
+      setFilteredPodcasts([]);
+    } else {
+      setPodcasts(response.content);
+      setFilteredPodcasts(response.content);
+    }
+    setTotalPages(response.totalPages);
     setIsLoading(false);
   };
 
@@ -89,12 +66,20 @@ const PodcastTable = () => {
     });
   };
 
-  const handelEditClick = (podcast) => {
+  const handleOpenCreateForm = () => {
+    setOpenCreateForm(!openCreateForm);
+  };
+
+  const handleOpenUpdateForm = () => {
+    setOpenUpdateForm(!openUpdateForm);
+  };
+
+  const handleEditClick = (podcast) => {
     setCurrentPodcast(podcast);
     setOpenUpdateForm(true);
   };
 
-  const handelDeleteClick = (id) => {
+  const handleDeleteClick = (id) => {
     confirmAlert({
       title: "Confirm Delete",
       message: "Are you sure you want to delete this podcast?",
@@ -105,7 +90,7 @@ const PodcastTable = () => {
             try {
               const data = await deletePodcast(id);
               toast.success(data.message || "Podcast deleted successfully");
-              fetchData();
+              fetchData(currentPage);
             } catch (error) {
               toast.error("An error occurred while deleting the podcast");
             }
@@ -119,29 +104,24 @@ const PodcastTable = () => {
     });
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleSearch = (query) => {
+    fetchData(currentPage, query);
+  };
+
   return (
     <div className="flex flex-col items-center space-y-4">
-      <h2 className="text-center font-bold text-green-700 text-3xl">
+      <h2 className="text-center font-bold text-green-900 text-3xl">
         Manage Your Podcast Channel
       </h2>
       <Card className="h-full w-full">
         <CardHeader floated={false} shadow={false} className="rounded-none">
           <div className="mb-4 flex flex-col justify-between gap-8 md:flex-row md:items-center">
-            <div>
-              <Typography variant="h5" color="blue-gray">
-                Recent Transactions
-              </Typography>
-              <Typography color="gray" className="mt-1 font-normal">
-                These are details about the last transactions
-              </Typography>
-            </div>
+            <Filter onSearch={handleSearch} />
             <div className="flex w-full shrink-0 gap-2 md:w-max">
-              <div className="w-full md:w-72">
-                <Input
-                  label="Search"
-                  icon={<MagnifyingGlassIcon className="h-5 w-5" />}
-                />
-              </div>
               <Button
                 className="flex items-center gap-3 bg-green-500"
                 size="sm"
@@ -162,8 +142,8 @@ const PodcastTable = () => {
           </div>
         </CardHeader>
         <CardBody className="px-0">
-          {podcasts.length === 0 ? (
-            <p className="text-red-500 text-center">No data</p>
+          {(podcasts && podcasts.length === 0) || !podcasts ? (
+            <p className="text-green-500 text-center">No data</p>
           ) : (
             <table className="w-full min-w-max table-auto text-left">
               <thead>
@@ -185,8 +165,8 @@ const PodcastTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {podcasts.map((podcast, index) => {
-                  const isLast = index === podcasts.length - 1;
+                {filteredPodcasts.map((podcast, index) => {
+                  const isLast = index === filteredPodcasts.length - 1;
                   const classes = isLast
                     ? "p-4"
                     : "p-4 border-b border-blue-gray-50";
@@ -249,37 +229,41 @@ const PodcastTable = () => {
                               key={index}
                               variant="ghost"
                               value={genre.name}
-                              className="w-fit"
+                              className="w-max"
                             />
                           ))}
                         </div>
                       </td>
                       <td className={classes}>
-                        <Tooltip content="View Podcast">
-                          <IconButton
-                            variant="text"
-                            onClick={() => handleViewClick(podcast.id)}
-                          >
-                            <DocumentMagnifyingGlassIcon className="h-4 w-4" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip content="Edit Podcast">
-                          <IconButton
-                            variant="text"
-                            onClick={() => handelEditClick(podcast)}
-                          >
-                            <PencilIcon className="h-4 w-4" />
-                          </IconButton>
-                        </Tooltip>
-
-                        <Tooltip content="Delete Podcast">
-                          <IconButton
-                            variant="text"
-                            onClick={() => handelDeleteClick(podcast.id)}
-                          >
-                            <TrashIcon className="h-4 w-4" />
-                          </IconButton>
-                        </Tooltip>
+                        <div className="flex gap-2">
+                          <Tooltip content="View">
+                            <IconButton
+                              variant="text"
+                              color="green"
+                              onClick={() => handleViewClick(podcast.id)}
+                            >
+                              <DocumentMagnifyingGlassIcon className="h-5 w-5" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip content="Edit">
+                            <IconButton
+                              variant="text"
+                              color="blue"
+                              onClick={() => handleEditClick(podcast)}
+                            >
+                              <PencilIcon className="h-5 w-5" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip content="Delete">
+                            <IconButton
+                              variant="text"
+                              color="red"
+                              onClick={() => handleDeleteClick(podcast.id)}
+                            >
+                              <TrashIcon className="h-5 w-5" />
+                            </IconButton>
+                          </Tooltip>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -288,36 +272,12 @@ const PodcastTable = () => {
             </table>
           )}
         </CardBody>
-        <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-          <Button variant="outlined" size="sm">
-            Previous
-          </Button>
-          <div className="flex items-center gap-2">
-            <IconButton variant="outlined" size="sm">
-              1
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              2
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              3
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              ...
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              8
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              9
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              10
-            </IconButton>
-          </div>
-          <Button variant="outlined" size="sm">
-            Next
-          </Button>
+        <CardFooter className="flex items-center justify-center border-t border-blue-gray-50 p-4">
+          <Paginator
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </CardFooter>
       </Card>
     </div>

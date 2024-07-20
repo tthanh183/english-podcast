@@ -21,7 +21,7 @@ const Channel = () => {
   };
 
   return (
-    <div className='flex'>
+    <div className='flex h-screen'>
         <ChannelSideBar setActiveContent={setActiveContent}/>
         <div className="flex-1 p-4">
           {renderContent()}

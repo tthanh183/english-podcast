@@ -2,15 +2,19 @@ import axios from 'axios'
 
 const baseURL = "http://localhost:8080";
 
-export const getPodcasts = async () => {
+export const getPodcasts = async (page, search = "") => {
     try {
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem('token');
         const response = await axios.get(`${baseURL}/api/podcasts`, {
             headers: {
                 Authorization: 'Bearer ' + token
+            },
+            params: {
+                page: page - 1,
+                search: search,
             }
-        })
-        return response.data
+        });
+        return response.data;
     } catch (error) {
         console.log(error);
     }
