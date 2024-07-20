@@ -25,17 +25,17 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     (error) => {
+        console.log(error);
         if (error.response && error.response.status === 401) {
-            console.error('Lỗi 401: Unauthorized');
             localStorage.removeItem("email");
             localStorage.removeItem("name");
             localStorage.removeItem("avatar");
             localStorage.removeItem("roles");
             localStorage.removeItem("token");
-            toast.warning("Đã hết phiên đăng nhập");
+            toast.warn("Đã hết phiên đăng nhập");
             setTimeout(() => {
                 window.location.href = '/login';
-            }, 3000);
+            }, 1000);
         } else if (error.code === "ERR_NETWORK") {
             toast.error("Máy chủ đang gặp sự cố !");
         }
