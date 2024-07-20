@@ -1,9 +1,11 @@
 package com.example.backend.controller;
 
 import com.example.backend.exception.ResourceNotFoundException;
+import com.example.backend.model.Episode;
 import com.example.backend.model.Genre;
 import com.example.backend.model.Podcast;
 import com.example.backend.model.User;
+import com.example.backend.service.IEpisodeService;
 import com.example.backend.service.IGenreService;
 import com.example.backend.service.IPodcastService;
 import com.example.backend.service.IUserService;
@@ -30,6 +32,7 @@ public class PodcastController {
     private final IPodcastService podcastService;
     private final IUserService userService;
     private final IGenreService genreService;
+    private final IEpisodeService episodeService;
     @GetMapping()
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> findAllPodcasts(@RequestParam int page, @RequestParam String search) {
@@ -39,10 +42,12 @@ public class PodcastController {
             User user = userService.findUserByEmail(userDetails.getUsername());
 
             Pageable pageable = PageRequest.of(page,4);
-            Page<Podcast> podcasts = podcastService.findPodcastsByUserAndTitleContaining(user,search,   pageable);
+            Page<Podcast> podcasts = podcastService.findPodcastsByUserAndTitleContaining(user,search, pageable);
             return new ResponseEntity<>(podcasts, HttpStatus.OK);
-        }catch (ResourceNotFoundException e){
+        }catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }catch (Exception e){
             return new ResponseEntity<>("An error occurred while fetching podcasts", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -102,6 +107,17 @@ public class PodcastController {
             Podcast podcast = podcastService.findPodcastById(id);
             podcastService.deletePodcast(podcast);
             return new ResponseEntity<>("Delete podcast successfully", HttpStatus.OK);
+        }catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getPodcastById(@PathVariable Long id) {
+        try {
+            Podcast podcast = podcastService.findPodcastById(id);
+            return new ResponseEntity<>(podcast, HttpStatus.OK);
         }catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

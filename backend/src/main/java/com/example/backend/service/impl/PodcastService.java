@@ -38,7 +38,7 @@ public class PodcastService implements IPodcastService {
             throw new IllegalArgumentException("User cannot be null");
         }
         Page<Podcast> podcasts = podcastRepository.findPodcastsByUserAndTitleContaining(user, search, pageable);
-        if(podcasts.isEmpty()) {
+        if(podcasts.getTotalElements() == 0) {
             throw new ResourceNotFoundException("No podcast found");
         }
         return podcasts;
