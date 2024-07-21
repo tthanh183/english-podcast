@@ -34,14 +34,14 @@ public class UserController {
 
     @GetMapping("/podcasts")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> findAllPodcasts(@RequestParam int page, @RequestParam String search) {
+    public ResponseEntity<?> findAllPodcasts(@RequestParam int page,@RequestParam int size, @RequestParam String search) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String email = userDetails.getUsername();
             User user = userService.findUserByEmail(email);
 
-            Pageable pageable = PageRequest.of(page,6);
+            Pageable pageable = PageRequest.of(page,size);
             Page<Podcast> podcasts = podcastService.findPodcastsByUserAndTitleContaining(user,search, pageable);
             return new ResponseEntity<>(podcasts, HttpStatus.OK);
         }catch (UsernameNotFoundException e) {
