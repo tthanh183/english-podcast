@@ -9,5 +9,5 @@ public interface IEpisodeService {
     Episode saveEpisode(Episode episode);
     void deleteEpisode(Episode episode);
     Episode findEpisodeById(Long id);
-    Page<Episode> findEpisodeByPodcastAndTitleContaining(Podcast podcast, String search, Pageable pageable);
+    Page<Episode> findEpisodeByPodcastAndTitleContainingOrderByCreatedDateDesc(Podcast podcast, String search, Pageable pageable);
 }

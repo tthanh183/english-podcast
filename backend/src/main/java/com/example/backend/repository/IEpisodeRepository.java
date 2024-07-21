@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IEpisodeRepository extends JpaRepository<Episode, Long> {
-    Page<Episode> findEpisodeByPodcastAndTitleContaining(Podcast podcast, String search, Pageable pageable);
+    Page<Episode> findEpisodeByPodcastAndTitleContainingOrderByCreatedDateDesc(Podcast podcast, String search, Pageable pageable);
 }

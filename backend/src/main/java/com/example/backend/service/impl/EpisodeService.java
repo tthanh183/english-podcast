@@ -31,11 +31,11 @@ public class EpisodeService implements IEpisodeService {
     }
 
     @Override
-    public Page<Episode> findEpisodeByPodcastAndTitleContaining(Podcast podcast, String search, Pageable pageable) {
+    public Page<Episode> findEpisodeByPodcastAndTitleContainingOrderByCreatedDateDesc(Podcast podcast, String search, Pageable pageable) {
         if(podcast == null) {
             throw new IllegalArgumentException("Podcast cannot be null");
         }
-        Page<Episode> episodes = episodeRepository.findEpisodeByPodcastAndTitleContaining(podcast, search, pageable);
+        Page<Episode> episodes = episodeRepository.findEpisodeByPodcastAndTitleContainingOrderByCreatedDateDesc(podcast, search, pageable);
         if(episodes.getTotalElements() == 0) {
             throw new ResourceNotFoundException("No episode found");
         }

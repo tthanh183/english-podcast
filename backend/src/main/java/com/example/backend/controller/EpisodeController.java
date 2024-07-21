@@ -27,10 +27,16 @@ public class EpisodeController {
     @GetMapping()
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> findAllEpisodes(@PathVariable Long podcastId, @RequestParam int page, @RequestParam String search) {
-        Podcast podcast = podcastService.findPodcastById(podcastId);
-        Pageable pageable = PageRequest.of(page, 4);
-        Page<Episode> episodes = episodeService.findEpisodeByPodcastAndTitleContaining(podcast, search, pageable);
-        return new ResponseEntity<>(episodes, HttpStatus.OK);
+        try {
+            Podcast podcast = podcastService.findPodcastById(podcastId);
+            Pageable pageable = PageRequest.of(page, 4);
+            Page<Episode> episodes = episodeService.findEpisodeByPodcastAndTitleContainingOrderByCreatedDateDesc(podcast, search, pageable);
+            return new ResponseEntity<>(episodes, HttpStatus.OK);
+        }catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping()

@@ -5,8 +5,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -21,11 +24,11 @@ public class Podcast {
     private String title;
     private String description;
     @Column(name = "date_create")
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
     @Column(name = "date_update")
-    private LocalDate updatedDate;
+    private LocalDateTime updatedDate;
     private String image;
-    @Column(name = "avg_rating")
+    @Column(name = "avg_rating", columnDefinition = "default 0")
     private double avgRating;
 
     @JsonIgnore

@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,13 +38,16 @@ public class UserController {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            User user = userService.findUserByEmail(userDetails.getUsername());
+            String email = userDetails.getUsername();
+            User user = userService.findUserByEmail(email);
 
             Pageable pageable = PageRequest.of(page,6);
             Page<Podcast> podcasts = podcastService.findPodcastsByUserAndTitleContaining(user,search, pageable);
             return new ResponseEntity<>(podcasts, HttpStatus.OK);
-        }catch (ResourceNotFoundException e) {
+        }catch (UsernameNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
         }catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }catch (Exception e){

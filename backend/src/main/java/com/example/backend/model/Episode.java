@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -21,9 +22,9 @@ public class Episode {
     private String title;
     private String description;
     @Column(name = "date_create")
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
     @Column(name = "date_update")
-    private LocalDate updatedDate;
+    private LocalDateTime updatedDate;
     private String url;
     private String script;
     private int duration;

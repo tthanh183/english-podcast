@@ -3,9 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.exception.ResourceNotFoundException;
 
 import com.example.backend.model.Podcast;
-import com.example.backend.service.IGenreService;
 import com.example.backend.service.IPodcastService;
-import com.example.backend.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,11 +19,9 @@ import java.util.List;
 @CrossOrigin("*")
 public class PodcastController {
     private final IPodcastService podcastService;
-    private final IUserService userService;
-    private final IGenreService genreService;
 
     @GetMapping()
-    public ResponseEntity<?> findAllPodcasts(@RequestParam int page, @RequestParam String search) {
+    public ResponseEntity<?> findAllPodcasts() {
         try {
             List<Podcast> podcasts = podcastService.findAll();
             return new ResponseEntity<>(podcasts, HttpStatus.OK);
