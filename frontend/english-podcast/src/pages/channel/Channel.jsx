@@ -1,8 +1,9 @@
-import React, {useState} from 'react'
-import ChannelSideBar from './ChannelSideBar'
+import React, { useState } from 'react';
+import ChannelSideBar from './ChannelSideBar';
 import Overview from "./Overview";
 import Statistic from "./Statistic";
 import PodcastTable from "../podcast/PodcastTable";
+import PodcastGrid from '../podcast/PodcastGrid';
 
 const Channel = () => {
   const [activeContent, setActiveContent] = useState("podcast");
@@ -12,22 +13,24 @@ const Channel = () => {
       case "overview":
         return <Overview />;
       case "statistic":
-        return <Statistic/>;
+        return <Statistic />;
       case "podcast":
-        return <PodcastTable/>;
+        return <PodcastGrid />;
       default:
-        return <PodcastTable/>;
+        return <PodcastTable />;
     }
   };
 
   return (
-    <div className='flex h-screen'>
-        <ChannelSideBar setActiveContent={setActiveContent}/>
-        <div className="flex-1 p-4">
-          {renderContent()}
-        </div>
+    <div className='flex flex-col md:flex-row md:h-screen'>
+      <div className="md:w-2/12">
+        <ChannelSideBar setActiveContent={setActiveContent} />
+      </div>
+      <div className="flex-1 p-4 overflow-auto">
+        {renderContent()}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Channel
+export default Channel;

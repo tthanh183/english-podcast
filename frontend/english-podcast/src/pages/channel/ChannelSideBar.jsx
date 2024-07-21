@@ -14,27 +14,27 @@ import {
   ListItemPrefix,
 } from "@material-tailwind/react";
 
-const ChannelSideBar = ({setActiveContent}) => {
+const ChannelSideBar = ({ setActiveContent }) => {
   return (
     <div>
-      <Card className="h-full w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
-        <div className="mb-2 p-4">
-          <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" className="w-40 h-40" />
+      <Card className="h-auto md:h-screen w-full p-4 shadow-xl shadow-blue-gray-900/5">
+        <div className="mb-4 p-4 flex justify-center">
+          <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" className="w-32 h-32 md:w-40 md:h-40" />
         </div>
         <List>
-          <ListItem onClick={() => setActiveContent('overview')}>
+          <ListItem onClick={() => setActiveContent('overview')} className="cursor-pointer">
             <ListItemPrefix>
               <GrOverview className="h-5 w-5" />
             </ListItemPrefix>
             Overview
           </ListItem>
-          <ListItem onClick={() => setActiveContent('statistic')}>
+          <ListItem onClick={() => setActiveContent('statistic')} className="cursor-pointer">
             <ListItemPrefix>
               <FcStatistics className="h-5 w-5" />
             </ListItemPrefix>
             Statistic
           </ListItem>
-          <ListItem onClick={() => setActiveContent('podcast')}>
+          <ListItem onClick={() => setActiveContent('podcast')} className="cursor-pointer">
             <ListItemPrefix>
               <BiPodcast className="h-5 w-5" />
             </ListItemPrefix>

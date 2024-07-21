@@ -11,28 +11,13 @@ import {
   Avatar,
   Typography,
 } from "@material-tailwind/react";
-import Logout from "../logout/Logout";
+import Logout from "../../pages/logout/Logout";
 
 const Header = () => {
   const { user, handleLogout, isAuthenticated } = useAuth();
-
   return (
-    <div className="p-3 bg-transparent flex items-center justify-between fixed w-[100%]">
+    <div className="p-3 bg-transparent flex items-center justify-between w-[100%]">
       <div className="flex items-center space-x-8 ">
-        <h1 className="text-[40px] uppercase font-bold text-green-900">
-          Podcast
-        </h1>
-        <nav className="flex items-center space-x-8">
-          <Link to="/" className="text-black font-sans text-lg">
-            Home
-          </Link>
-          <Link to="/about" className="text-black font-sans text-lg">
-            About
-          </Link>
-          <Link to="/contact" className="text-black font-sans text-lg">
-            Contact
-          </Link>
-        </nav>
       </div>
       <div className="flex items-center space-x-8">
         {isAuthenticated ? (
@@ -137,7 +122,7 @@ const Header = () => {
                     />
                   </svg>
                   <Typography variant="small" className="text-black font-sans">
-                    <Logout/>
+                    <Logout />
                   </Typography>
                 </MenuItem>
               </MenuList>

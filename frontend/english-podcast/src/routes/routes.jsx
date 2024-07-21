@@ -1,5 +1,4 @@
 import React from 'react';
-import LandingPage from '../pages/landing/LandingPage';
 import Login from '../pages/login/Login';
 import Logout from '../pages/logout/Logout'
 import HomePage from '../pages/home/HomePage';
@@ -8,7 +7,7 @@ import EpisodeTable from '../pages/episode/EpisodeTable'
 const routes = [
   {
     path: '/',
-    element: <LandingPage/>,
+    element: <HomePage/>,
   },
   {
     path: '/login',
@@ -17,10 +16,6 @@ const routes = [
   {
     path: '/logout',
     element: <Logout />
-  },
-  {
-    path: '/home',
-    element: <HomePage/>
   },
   {
     path: '/channel',

@@ -20,9 +20,9 @@ const SideBar = () => {
     <div>
       <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
         <div className="mb-2 p-4">
-          <Typography variant="h5" className="text-green-700">
-            Sidebar
-          </Typography>
+        <h1 className="text-[40px] uppercase font-bold text-green-900">
+          Podcast
+        </h1>
         </div>
         <List>
           <ListItem>

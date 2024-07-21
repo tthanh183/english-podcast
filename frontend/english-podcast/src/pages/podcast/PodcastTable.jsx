@@ -111,13 +111,13 @@ const PodcastTable = () => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className="flex flex-col items-center space-y-4 w-full md:px-2">
       <h2 className="text-center font-bold text-green-900 text-3xl">
         Manage Your Podcast Channel
       </h2>
-      <Card className="h-full w-full">
+      <Card className="w-full">
         <CardHeader floated={false} shadow={false} className="rounded-none">
-          <div className="mb-4 flex flex-col justify-between gap-8 md:flex-row md:items-center">
+          <div className="mb-4 flex flex-col justify-between gap-4 md:flex-row md:items-center">
             <Filter onSearch={handleSearch} />
             <div className="flex w-full shrink-0 gap-2 md:w-max">
               <Button
@@ -143,131 +143,133 @@ const PodcastTable = () => {
           {(podcasts && podcasts.length === 0) || !podcasts ? (
             <p className="text-green-500 text-center">No data</p>
           ) : (
-            <table className="w-full min-w-max table-auto text-left">
-              <thead>
-                <tr>
-                  {header.map((head) => (
-                    <th
-                      key={head}
-                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                    >
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal leading-none opacity-70"
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-max table-auto text-left">
+                <thead>
+                  <tr>
+                    {header.map((head) => (
+                      <th
+                        key={head}
+                        className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                       >
-                        {head}
-                      </Typography>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filteredPodcasts.map((podcast, index) => {
-                  const isLast = index === filteredPodcasts.length - 1;
-                  const classes = isLast
-                    ? "p-4"
-                    : "p-4 border-b border-blue-gray-50";
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal leading-none opacity-70"
+                        >
+                          {head}
+                        </Typography>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredPodcasts.map((podcast, index) => {
+                    const isLast = index === filteredPodcasts.length - 1;
+                    const classes = isLast
+                      ? "p-4"
+                      : "p-4 border-b border-blue-gray-50";
 
-                  return (
-                    <tr key={podcast.id}>
-                      <td className={classes}>
-                        <div className="flex items-center gap-3 w-60">
-                          <img
-                            className="h-full w-full object-cover object-center"
-                            src={podcast.image}
-                            alt="nature image"
-                          />
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <div className="flex items-center gap-3">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-bold"
-                          >
-                            {podcast.title}
-                          </Typography>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <div className="flex items-center gap-3 max-w-48">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-bold"
-                          >
-                            {podcast.description}
-                          </Typography>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {podcast.updatedDate}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {podcast.star}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <div className="flex flex-col gap-2">
-                          {podcast.genres.map((genre, index) => (
-                            <Chip
-                              key={index}
-                              variant="ghost"
-                              value={genre.name}
-                              className="w-max"
+                    return (
+                      <tr key={podcast.id}>
+                        <td className={classes}>
+                          <div className="flex items-center gap-3 w-32 md:w-60">
+                            <img
+                              className="h-full w-full object-cover object-center"
+                              src={podcast.image}
+                              alt="nature image"
                             />
-                          ))}
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <div className="flex gap-2">
-                          <Tooltip content="View">
-                            <IconButton
-                              variant="text"
-                              color="green"
-                              onClick={() => handleViewClick(podcast.id)}
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <div className="flex items-center gap-3">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-bold"
                             >
-                              <DocumentMagnifyingGlassIcon className="h-5 w-5" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip content="Edit">
-                            <IconButton
-                              variant="text"
-                              color="blue"
-                              onClick={() => handleEditClick(podcast)}
+                              {podcast.title}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <div className="flex items-center gap-3 max-w-48">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-bold"
                             >
-                              <PencilIcon className="h-5 w-5" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip content="Delete">
-                            <IconButton
-                              variant="text"
-                              color="red"
-                              onClick={() => handleDeleteClick(podcast.id)}
-                            >
-                              <TrashIcon className="h-5 w-5" />
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                              {podcast.description}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {podcast.updatedDate}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {podcast.star}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <div className="flex flex-col gap-2">
+                            {podcast.genres.map((genre, index) => (
+                              <Chip
+                                key={index}
+                                variant="ghost"
+                                value={genre.name}
+                                className="w-max"
+                              />
+                            ))}
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <div className="flex gap-2">
+                            <Tooltip content="View">
+                              <IconButton
+                                variant="text"
+                                color="green"
+                                onClick={() => handleViewClick(podcast.id)}
+                              >
+                                <DocumentMagnifyingGlassIcon className="h-5 w-5" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip content="Edit">
+                              <IconButton
+                                variant="text"
+                                color="blue"
+                                onClick={() => handleEditClick(podcast)}
+                              >
+                                <PencilIcon className="h-5 w-5" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip content="Delete">
+                              <IconButton
+                                variant="text"
+                                color="red"
+                                onClick={() => handleDeleteClick(podcast.id)}
+                              >
+                                <TrashIcon className="h-5 w-5" />
+                              </IconButton>
+                            </Tooltip>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           )}
         </CardBody>
         <CardFooter className="flex items-center justify-center border-t border-blue-gray-50 p-4">
