@@ -26,19 +26,19 @@ axiosInstance.interceptors.response.use(
     },
     (error) => {
         console.log(error);
-        if (error.response && error.response.status === 401) {
-            localStorage.removeItem("email");
-            localStorage.removeItem("name");
-            localStorage.removeItem("avatar");
-            localStorage.removeItem("roles");
-            localStorage.removeItem("token");
-            toast.warn("Đã hết phiên đăng nhập");
-            setTimeout(() => {
-                window.location.href = '/login';
-            }, 1000);
-        } else if (error.code === "ERR_NETWORK") {
-            toast.error("Máy chủ đang gặp sự cố !");
-        }
+        // if (error.response && error.response.status === 401) {
+        //     localStorage.removeItem("email");
+        //     localStorage.removeItem("name");
+        //     localStorage.removeItem("avatar");
+        //     localStorage.removeItem("roles");
+        //     localStorage.removeItem("token");
+        //     toast.warn("Đã hết phiên đăng nhập");
+        //     setTimeout(() => {
+        //         window.location.href = '/login';
+        //     }, 1000);
+        // } else if (error.code === "ERR_NETWORK") {
+        //     toast.error("Máy chủ đang gặp sự cố !");
+        // }
         return Promise.reject(error);
     }
 );

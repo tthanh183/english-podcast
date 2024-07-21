@@ -10,7 +10,7 @@ export const getEpisodes = async (id, page, search = "") => {
         });
         return response.data;
     } catch (error) {
-        console.log(error);
+        console.log(response.message);
     }
 }
 

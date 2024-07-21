@@ -114,8 +114,8 @@ const EpisodeCreate = ({ open, handleOpen, podcastId }) => {
       handler={handleOpen}
       className="bg-transparent shadow-none flex items-center justify-center"
     >
-      <Card className="mx-auto w-[1000px] p-6 shadow-lg ">
-        <CardBody className="flex flex-col gap-6">
+      <Card className="mx-auto w-[1000px] p-2 shadow-lg ">
+        <CardBody className="flex flex-col gap-1">
           <Typography
             variant="h4"
             color="green"
@@ -176,7 +176,7 @@ const EpisodeCreate = ({ open, handleOpen, podcastId }) => {
                   <img
                     src={imagePreview}
                     alt="Preview"
-                    className="mt-2 w-full h-full object-cover rounded-lg shadow-sm"
+                    className="mt-2 w-56 h-fit object-contain rounded-lg shadow-sm"
                   />
                 )}
               </div>

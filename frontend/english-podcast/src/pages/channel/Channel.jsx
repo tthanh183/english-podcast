@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import ChannelSideBar from './ChannelSideBar';
 import Overview from "./Overview";
 import Statistic from "./Statistic";
-import PodcastTable from "../podcast/PodcastTable";
 import PodcastGrid from '../podcast/PodcastGrid';
 
 const Channel = () => {
@@ -17,7 +16,7 @@ const Channel = () => {
       case "podcast":
         return <PodcastGrid />;
       default:
-        return <PodcastTable />;
+        return <PodcastGrid />;
     }
   };
 

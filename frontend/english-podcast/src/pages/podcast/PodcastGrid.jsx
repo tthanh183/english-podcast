@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPodcasts, deletePodcast } from "../../services/podcast/PodcastService.js";
+import { getPodcastsByUser, deletePodcast } from "../../services/user/UserService.js";
 import { Button } from "@material-tailwind/react";
 import PodcastCreate from "./PodcastCreate.jsx";
 import PodcastUpdate from "./PodcastUpdate.jsx";
@@ -10,6 +10,7 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import Filter from "../../components/Filter/Filter.jsx";
 import Paginator from "../../components/Paginator/Paginator.jsx";
 import ManageCard from "../../components/Podcast/ManageCard.jsx";
+import { IoCreateOutline } from "react-icons/io5";
 
 const PodcastGrid = () => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
@@ -34,10 +35,12 @@ const PodcastGrid = () => {
 
   const fetchData = async (page, searchQuery = "") => {
     setIsLoading(true);
-    const response = await getPodcasts(page, searchQuery); 
+    const response = await getPodcastsByUser(page, searchQuery); 
+    
     if (response.length === 0) {
       setPodcasts([]);
       setFilteredPodcasts([]);
+      toast.info("No podcasts found for this user.");
     } else {
       setPodcasts(response.content);
       setFilteredPodcasts(response.content);
@@ -47,6 +50,7 @@ const PodcastGrid = () => {
   };
 
   const handleViewClick = (id) => {
+    console.log(id);
     navigate("/channel/podcast", {
       state: {
         id: id,
@@ -110,14 +114,14 @@ const PodcastGrid = () => {
         <div className="flex w-full shrink-0 gap-2 md:w-max">
           <Button
             className="flex items-center gap-3 bg-green-500"
-            size="sm"
+            size="md"
             onClick={handleOpenCreateForm}
           >
-            Create
+             <IoCreateOutline strokeWidth={2} className="h-4 w-4" /> Create
           </Button>
-          <PodcastCreate open={openCreateForm} handleOpen={handleOpenCreateForm} />
-          <PodcastUpdate open={openUpdateForm} handleOpen={handleOpenUpdateForm} podcast={currentPodcast} />
         </div>
+        <PodcastCreate open={openCreateForm} handleOpen={handleOpenCreateForm} />
+        <PodcastUpdate open={openUpdateForm} handleOpen={handleOpenUpdateForm} podcast={currentPodcast} />
       </div>
       {isLoading ? (
         <p>Loading...</p>

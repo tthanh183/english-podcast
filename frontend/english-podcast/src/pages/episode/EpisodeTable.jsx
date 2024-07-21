@@ -1,17 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getEpisodes, deleteEpisode } from "../../services/episode/EpisodeService.js";
-import { DocumentMagnifyingGlassIcon, PencilIcon } from "@heroicons/react/24/solid";
+import {
+  getEpisodes,
+  deleteEpisode,
+} from "../../services/episode/EpisodeService.js";
+import {
+  DocumentMagnifyingGlassIcon,
+  PencilIcon,
+} from "@heroicons/react/24/solid";
 import { ArrowUpTrayIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { Card, CardHeader, Typography, Button, CardBody, Chip, CardFooter, IconButton, Tooltip } from "@material-tailwind/react";
+import {
+  Card,
+  CardHeader,
+  Typography,
+  Button,
+  CardBody,
+  Chip,
+  CardFooter,
+  IconButton,
+  Tooltip,
+} from "@material-tailwind/react";
 import EpisodeCreate from "./EpisodeCreate.jsx";
 import EpisodeUpdate from "./EpisodeUpdate.jsx";
 import { toast } from "react-toastify";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import Filter from "../../components/Filter/Filter.jsx";
-import Paginator from "../../components/Paginator/Paginator.jsx"
-import { getPodcastById, getPodcasts } from "../../services/podcast/PodcastService.js";
+import Paginator from "../../components/Paginator/Paginator.jsx";
+import {
+  getPodcastById,
+  getPodcasts,
+} from "../../services/podcast/PodcastService.js";
 import { formatDuration } from "../../utils/formatDuration.js";
 
 const EpisodeTable = () => {
@@ -27,7 +46,7 @@ const EpisodeTable = () => {
     "Duration",
     "",
   ]);
-  
+
   const [podcast, setPodcast] = useState(null);
   const [episodes, setEpisodes] = useState([]);
   const [filteredEpisodes, setFilteredEpisodes] = useState([]);
@@ -35,14 +54,14 @@ const EpisodeTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
-  const location = useLocation()
-  const podcastId = location.state?.id
+  const location = useLocation();
+  const podcastId = location.state?.id;
 
   useEffect(() => {
-    if(podcastId) {
-      fetchPodcast(podcastId)
+    if (podcastId) {
+      fetchPodcast(podcastId);
     }
-  },[podcastId])
+  }, [podcastId]);
 
   const fetchPodcast = async (podcastId) => {
     try {
@@ -67,10 +86,12 @@ const EpisodeTable = () => {
 
   const fetchData = async (page, searchQuery = "") => {
     setIsLoading(true);
-    const response = await getEpisodes(podcastId,page, searchQuery); 
-    if (response.length === 0) {
+
+    const response = await getEpisodes(podcastId, page, searchQuery);
+    if (response.length == 0) {
       setEpisodes([]);
       setFilteredEpisodes([]);
+      toast.info("No episodes found for this podcast.");
     } else {
       setEpisodes(response.content);
       setFilteredEpisodes(response.content);
@@ -109,7 +130,7 @@ const EpisodeTable = () => {
           label: "Yes",
           onClick: async () => {
             try {
-              const data = await deleteEpisode(podcastId,id);
+              const data = await deleteEpisode(podcastId, id);
               toast.success(data.message || "Episode deleted successfully");
               fetchData(currentPage);
             } catch (error) {
@@ -136,7 +157,7 @@ const EpisodeTable = () => {
   return (
     <div className="flex flex-col items-center space-y-4">
       <h2 className="text-center font-bold text-green-900 text-3xl">
-        {podcast ? podcast.title: isLoading}
+        {podcast ? podcast.title : isLoading}
       </h2>
       <Card className="h-full w-full">
         <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -148,7 +169,7 @@ const EpisodeTable = () => {
                 size="sm"
                 onClick={handleOpenCreateForm}
               >
-                <ArrowUpTrayIcon strokeWidth={2} className="h-4 w-4" /> Create
+                <ArrowUpTrayIcon strokeWidth={2} className="h-4 w-4" /> Upload
               </Button>
               <EpisodeCreate
                 open={openCreateForm}
@@ -232,12 +253,11 @@ const EpisodeTable = () => {
                           variant="small"
                           color="blue-gray"
                           className="font-normal"
-                        >    
-                        <audio controls className="mt-2">
-                    <source src={episode.url} type="audio/mpeg" />
-                    Your browser does not support the audio element.
-                  </audio>     
-                          
+                        >
+                          <audio controls className="mt-2">
+                            <source src={episode.url} type="audio/mpeg" />
+                            Your browser does not support the audio element.
+                          </audio>
                         </Typography>
                       </td>
                       <td className={classes}>
@@ -246,16 +266,16 @@ const EpisodeTable = () => {
                           color="blue-gray"
                           className="font-normal"
                         >
-                           {episode.updatedDate}
+                          {episode.updatedDate}
                         </Typography>
                       </td>
                       <td className={classes}>
-                      <Typography
+                        <Typography
                           variant="small"
                           color="blue-gray"
                           className="font-normal"
                         >
-                           {formatDuration(episode.duration)}
+                          {formatDuration(episode.duration)}
                         </Typography>
                       </td>
                       <td className={classes}>

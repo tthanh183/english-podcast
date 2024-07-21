@@ -50,6 +50,18 @@ const EpisodeUpdate = ({ open, handleOpen, episode, podcastId }) => {
     }
   };
 
+  const getAudioDuration = (file) => {
+    return new Promise((resolve, reject) => {
+      const audio = new Audio(URL.createObjectURL(file));
+      audio.addEventListener('loadedmetadata', () => {
+        resolve(audio.duration);
+      });
+      audio.addEventListener('error', (e) => {
+        reject(e);
+      });
+    });
+  };
+
   const onSubmit = async (data) => {
     setUploading(true);
     try {
@@ -58,8 +70,10 @@ const EpisodeUpdate = ({ open, handleOpen, episode, podcastId }) => {
         imgUrl = await handleImageUpload(image);
       }
       let audioUrl = audioPreview;
+      let audioDuration;
       if (audio) {
         audioUrl = await handleAudioUpload(audio);
+        audioDuration = await getAudioDuration(audio);
       }
 
       const date = new Date();
@@ -67,6 +81,7 @@ const EpisodeUpdate = ({ open, handleOpen, episode, podcastId }) => {
         ...data,
         image: imgUrl,
         url: audioUrl,
+        duration: audio ? Math.round(audioDuration) : episode.duration,
         createdDate: episode.createdDate,
         updatedDate: date,
       };
@@ -151,7 +166,7 @@ const EpisodeUpdate = ({ open, handleOpen, episode, podcastId }) => {
                   <img
                     src={imagePreview}
                     alt="Preview"
-                    className="mt-2 w-full h-full object-cover rounded-lg shadow-sm"
+                    className="mt-2 w-56 h-fit object-contain rounded-lg shadow-sm"
                   />
                 )}
               </div>

@@ -18,6 +18,9 @@ const Header = () => {
   return (
     <div className="p-3 bg-transparent flex items-center justify-between w-[100%]">
       <div className="flex items-center space-x-8 ">
+      <Typography variant="h5" color="blue-gray" className="uppercase font-semibold text-green-900 text-5xl">
+          Podcast
+        </Typography>
       </div>
       <div className="flex items-center space-x-8">
         {isAuthenticated ? (
@@ -63,7 +66,7 @@ const Header = () => {
                   </svg>
 
                   <Typography variant="small" className="text-black font-sans">
-                    My Profile
+                    <Link to={"/channel"}>My channel</Link>
                   </Typography>
                 </MenuItem>
                 <MenuItem className="flex items-center gap-2">

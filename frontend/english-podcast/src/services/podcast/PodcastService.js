@@ -23,27 +23,10 @@ export const getPodcastById = async (id) => {
     }
 }
 
-export const createPodcast = async (podcast) => {
+export const getNewReleasedPodcast = async () => {
     try {
-        const response = await axiosInstance.post('/podcasts', podcast);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-export const updatePodcast = async (id, podcast) => {
-    try {
-        const response = await axiosInstance.put(`/podcasts/${id}`, podcast);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-export const deletePodcast = async (id) => {
-    try {
-        const response = await axiosInstance.delete(`/podcasts/${id}`);
+        const response = await axiosInstance.get('/podcasts/new-released');
+        console.log(response.data);
         return response.data;
     } catch (error) {
         console.log(error);

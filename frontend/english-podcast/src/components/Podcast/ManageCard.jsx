@@ -12,14 +12,14 @@ const ManageCard = ({ podcast, onView, onEdit, onDelete }) => {
         <Typography variant="h5" className="mb-2">
           {podcast.title}
         </Typography>
-        <Typography className="mb-2">
+        <Typography className="mb-2 min-h-24">
           {podcast.description}
         </Typography>
         <Typography className="mb-2">
-          Last updated: {podcast.updatedDate}
+          Last updated: {podcast.updatedDate.split('T')[0]}
         </Typography>
         <Typography className="mb-2">
-          Rating: {podcast.star}
+          Rating: {podcast.avgRating}
         </Typography>
         <div className="flex justify-center gap-2 mb-2">
           {podcast.genres.map((genre, index) => (

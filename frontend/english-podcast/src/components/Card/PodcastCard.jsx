@@ -1,54 +1,33 @@
-import React from 'react'
-
+import React from "react";
 import {
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    Typography,
-    Button,
-  } from "@material-tailwind/react";
-const PodcastCard = ({podcast}) => {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Typography,
+  Button,
+} from "@material-tailwind/react";
+
+const PodcastCard = ({ podcast }) => {
   return (
-    <div>
-        <Card className="w-96">
-      <CardHeader shadow={false} floated={false} className="h-96">
+    <Card className="w-56 shadow-lg">
+      <CardHeader shadow={false} floated={false} className="h-fit overflow-hidden">
         <img
           src={podcast.image}
           alt="card-image"
-          className="h-full w-full object-cover"
+          className="h-fit w-fit object-contain p-2"
         />
       </CardHeader>
-      <CardBody>
-        <div className="mb-2 flex items-center justify-between">
-          <Typography color="blue-gray" className="font-medium">
-            Apple AirPods
-          </Typography>
-          <Typography color="blue-gray" className="font-medium">
-            $95.00
-          </Typography>
-        </div>
-        <Typography
-          variant="small"
-          color="gray"
-          className="font-normal opacity-75"
-        >
-          With plenty of talk and listen time, voice-activated Siri access, and
-          an available wireless charging case.
+      <CardBody className="text-center p-2">
+        <Typography color="blue-gray">
+          {podcast.title}
+        </Typography>
+        <Typography variant="small" color="gray" className="mt-2 h-20">
+          {podcast.description ? podcast.description.split('\.')[0] : "No description available"}
         </Typography>
       </CardBody>
-      <CardFooter className="pt-0">
-        <Button
-          ripple={false}
-          fullWidth={true}
-          className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
-        >
-          Add to Cart
-        </Button>
-      </CardFooter>
     </Card>
-    </div>
-  )
-}
+  );
+};
 
-export default PodcastCard
+export default PodcastCard;

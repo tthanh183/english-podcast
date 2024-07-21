@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { handleImageUpload } from "../../firebase/handleUpload";
 import { getGenres } from "../../services/genre/GenreService";
-import { createPodcast } from "../../services/podcast/PodcastService";
+import { createPodcast } from "../../services/user/UserService";
 import { toast } from "react-toastify";
 import {
   Button,
@@ -144,7 +144,7 @@ const PodcastCreate = ({ open, handleOpen }) => {
                   <img
                     src={imagePreview}
                     alt="Preview"
-                    className="mt-2 w-full h-full object-cover rounded-lg shadow-sm"
+                    className="mt-2 w-56 h-fit object-contain rounded-lg shadow-sm"
                   />
                 )}
               </div>
