@@ -12,4 +12,8 @@ public interface IPodcastService {
     void deletePodcast(Podcast podcast);
     Podcast findPodcastById(Long id);
     Page<Podcast> findPodcastsByUserAndTitleContaining(User user, String search, Pageable pageable);
+    List<Podcast> findNewReleasedPodcasts(Pageable pageable);
+    List<Podcast> findTopRatedPodcasts(Pageable pageable);
+
+    List<Podcast> findAll();
 }

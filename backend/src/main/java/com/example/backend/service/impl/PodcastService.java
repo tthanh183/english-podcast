@@ -8,14 +8,22 @@ import com.example.backend.service.IPodcastService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 
 @Service
 @RequiredArgsConstructor
 public class PodcastService implements IPodcastService {
     private final IPodcastRepository podcastRepository;
+
+    @Override
+    public List<Podcast> findAll() {
+        return podcastRepository.findAll();
+    }
 
     @Override
     public Podcast savePodcast(Podcast podcast) {
@@ -43,4 +51,23 @@ public class PodcastService implements IPodcastService {
         }
         return podcasts;
     }
+
+    @Override
+    public List<Podcast> findNewReleasedPodcasts(Pageable pageable) {
+        return podcastRepository.findAllByOrderByCreatedDateDesc(pageable);
+    }
+
+    @Override
+    public List<Podcast> findTopRatedPodcasts(Pageable pageable) {
+        List<Object[]> results = podcastRepository.findTopRatedPodcasts(pageable);
+        List<Podcast> podcasts = new ArrayList<>();
+        for (Object[] result : results) {
+            Podcast podcast = (Podcast) result[0];
+            double avgRating = (double) result[1];
+            podcast.setAvgRating(avgRating); // Cần thêm trường averageRating vào model Podcast
+            podcasts.add(podcast);
+        }
+        return podcasts;
+    }
+
 }

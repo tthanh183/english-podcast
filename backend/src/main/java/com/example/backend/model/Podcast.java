@@ -25,7 +25,8 @@ public class Podcast {
     @Column(name = "date_update")
     private LocalDate updatedDate;
     private String image;
-    private int star;
+    @Column(name = "avg_rating")
+    private double avgRating;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,4 +48,7 @@ public class Podcast {
 
     @OneToMany(mappedBy = "podcast", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<FavoritePodcast> favoritePodcasts;
+
+    @OneToMany(mappedBy = "podcast", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Rating> ratings;
 }

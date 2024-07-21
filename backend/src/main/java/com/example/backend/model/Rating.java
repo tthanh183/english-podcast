@@ -11,13 +11,17 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(RatingId.class)
 public class Rating {
     @Id
-    private Long userId;
-    @Id
-    private Long podcastId;
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Podcast podcast;
+
     private int rates;
+
     @Column(name = "create_date")
     private LocalDate createdDate;
 }
