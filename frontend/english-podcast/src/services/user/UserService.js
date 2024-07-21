@@ -1,10 +1,11 @@
 import axiosInstance from '../../utils/axiosInstance';
 
-export const getPodcastsByUser = async (page, search = "") => {
+export const getPodcastsByUser = async (page, size, search = "") => {
     try {
         const response = await axiosInstance.get('/users/podcasts', {
             params: {
                 page: page - 1,
+                size: size,
                 search: search,
             }
         });

@@ -16,7 +16,7 @@ import Logout from "../../pages/logout/Logout";
 const Header = () => {
   const { user, handleLogout, isAuthenticated } = useAuth();
   return (
-    <div className="p-3 bg-transparent flex items-center justify-between w-[100%]">
+    <div className="p-3 bg-transparent flex items-center justify-between w-[100%] bg-gradient-to-b from-green-500 to-gray-50">
       <div className="flex items-center space-x-8 ">
       <Typography variant="h5" color="blue-gray" className="uppercase font-semibold text-green-900 text-5xl">
           Podcast

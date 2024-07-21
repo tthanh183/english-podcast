@@ -30,9 +30,10 @@ const HomePage = () => {
   };
 
   const handleClickCard = (id) => {
-    console.log(id);
-    navigate(`/show/${id}` , {
-      podcastId: id
+    navigate('/show' , {
+      state : {
+        id: id
+      }
     })
   }
 

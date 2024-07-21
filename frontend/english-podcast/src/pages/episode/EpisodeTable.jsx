@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   getEpisodes,
   deleteEpisode,
-} from "../../services/episode/EpisodeService.js";
+} from "../../services/podcast/PodcastService.js";
 import {
   DocumentMagnifyingGlassIcon,
   PencilIcon,
@@ -52,6 +52,7 @@ const EpisodeTable = () => {
   const [filteredEpisodes, setFilteredEpisodes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSizes, setPageSizes] = useState(6) 
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
   const location = useLocation();
@@ -87,7 +88,7 @@ const EpisodeTable = () => {
   const fetchData = async (page, searchQuery = "") => {
     setIsLoading(true);
 
-    const response = await getEpisodes(podcastId, page, searchQuery);
+    const response = await getEpisodes(podcastId, page, pageSizes, searchQuery);
     if (response.length == 0) {
       setEpisodes([]);
       setFilteredEpisodes([]);

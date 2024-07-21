@@ -16,7 +16,7 @@ import {
   Input,
   Textarea,
 } from "@material-tailwind/react";
-import { createEpisode } from "../../services/episode/EpisodeService";
+import { createEpisode } from "../../services/podcast/PodcastService";
 
 const EpisodeCreate = ({ open, handleOpen, podcastId }) => {
   const [audio, setAudio] = useState(null);

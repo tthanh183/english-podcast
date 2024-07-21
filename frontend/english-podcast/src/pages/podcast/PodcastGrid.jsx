@@ -20,6 +20,7 @@ const PodcastGrid = () => {
   const [filteredPodcasts, setFilteredPodcasts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSizes, setPageSizes] = useState(6)
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
 
@@ -35,7 +36,7 @@ const PodcastGrid = () => {
 
   const fetchData = async (page, searchQuery = "") => {
     setIsLoading(true);
-    const response = await getPodcastsByUser(page, searchQuery); 
+    const response = await getPodcastsByUser(page, pageSizes, searchQuery); 
     
     if (response.length === 0) {
       setPodcasts([]);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { Dialog, DialogHeader, DialogBody, DialogFooter, Card, CardBody, CardFooter, Typography, Button, Input, Textarea } from "@material-tailwind/react";
-import { updateEpisode } from "../../services/episode/EpisodeService.js";
+import { updateEpisode } from "../../services/podcast/PodcastService.js";
 import { toast } from "react-toastify";
 import { handleAudioUpload, handleImageUpload } from '../../firebase/handleUpload.js';
 
