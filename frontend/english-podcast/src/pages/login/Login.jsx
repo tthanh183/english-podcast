@@ -21,13 +21,15 @@ const Login = () => {
   } = useForm();
   const navigate = useNavigate();
   const auth = useAuth();
-
+  
   const onSubmit = async (data) => {
     try {
       const userData = await authenticationService.login(data);
       if (userData) {
         auth.handleLogin(userData.token);
         toast.success("Login successfully!");
+        // const previousUrl = localStorage.getItem("previousUrl");
+        // url = previousUrl.length == 0 ? "" : previousUrl;
         navigate("/");
       } else {
         toast.error("Invalid credentials, please try again.");
