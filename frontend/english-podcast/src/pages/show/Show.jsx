@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { getEpisodes, getPodcastById } from "../../services/podcast/PodcastService.js";
 import EpisodeCard from "../../components/Card/EpisodeCard";
 import Header from "../../components/Layout/Header";
@@ -9,7 +9,7 @@ const Show = () => {
   const [podcast, setPodcast] = useState(null);
   const [episodes, setEpisodes] = useState([]);
   const [loadingEpisodes, setLoadingEpisodes] = useState(true);
-  const podcastId = location.state?.id;
+  const {podcastId} = useParams();
 
   useEffect(() => {
     const fetchPodcast = async () => {

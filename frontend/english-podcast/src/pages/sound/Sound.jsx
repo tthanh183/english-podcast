@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { getEpisodeById } from "../../services/episode/EpisodeService";
 import Header from "../../components/Layout/Header";
 import AudioPlay from "../../components/Audio/AudioPlay";
@@ -10,7 +10,7 @@ import Comment from "../../components/Comment/Comment";
 
 const Sound = () => {
   const location = useLocation();
-  const episodeId = location.state?.episodeId;
+  const {episodeId, podcastId} = useParams();
   const [episode, setEpisode] = useState(null);
 
   useEffect(() => {

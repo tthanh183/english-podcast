@@ -30,11 +30,7 @@ const HomePage = () => {
   };
 
   const handleClickCard = (id) => {
-    navigate('/show' , {
-      state : {
-        id: id
-      }
-    })
+    navigate(`/show/${id}`)
   }
 
 

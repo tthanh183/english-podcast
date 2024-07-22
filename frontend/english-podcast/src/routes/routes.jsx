@@ -30,11 +30,11 @@ const routes = [
     private:true,
   },
   {
-    path: '/show',
+    path: '/show/:podcastId',
     element: <Show/>
   },
   {
-    path: '/show/play',
+    path: '/show/:podcastId/play/:episodeId',
     element: <Sound/>
   }
 ];

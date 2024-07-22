@@ -8,14 +8,10 @@ import {
 } from "@material-tailwind/react";
 import { Link, useNavigate } from "react-router-dom";
 
-const EpisodeCard = ({episodeId, episode }) => {
+const EpisodeCard = ({episodeId, episode, podcastId }) => {
   const navigate = useNavigate();
   const handleListen = () => {
-    navigate("/show/play", {
-      state: {
-        episodeId: episodeId,
-      },
-    });
+    navigate(`/show/${podcastId}/play/${episodeId}`);
   };
 
   return (
@@ -37,7 +33,6 @@ const EpisodeCard = ({episodeId, episode }) => {
           </Typography>
         </CardBody>
         <div className="flex justify-end">
-          <a href="#" className="inline-block">
             <Button
               variant="text"
               className="flex items-center gap-2"
@@ -59,7 +54,6 @@ const EpisodeCard = ({episodeId, episode }) => {
                 />
               </svg>
             </Button>
-          </a>
         </div>
       </div>
     </section>
