@@ -25,7 +25,7 @@ public class EpisodeController {
     private final IPodcastService podcastService;
 
     @GetMapping("{id}")
-    public ResponseEntity<?> getAllEpisodes(@PathVariable Long id) {
+    public ResponseEntity<?> getEpisodeById(@PathVariable Long id) {
         try {
             Episode episode = episodeService.findEpisodeById(id);
             return new ResponseEntity<>(episode, HttpStatus.OK);

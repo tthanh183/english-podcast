@@ -34,7 +34,7 @@ public class UserController {
 
     @GetMapping("/podcasts")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> findAllPodcasts(@RequestParam int page,@RequestParam int size, @RequestParam String search) {
+    public ResponseEntity<?> findAllPodcastsByUser(@RequestParam int page,@RequestParam int size, @RequestParam String search) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();

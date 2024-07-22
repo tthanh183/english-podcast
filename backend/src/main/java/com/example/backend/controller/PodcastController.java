@@ -64,7 +64,6 @@ public class PodcastController {
     }
 
     @GetMapping("/{podcastId}/episodes")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> findAllEpisodes(@PathVariable Long podcastId, @RequestParam int page, @RequestParam int size, @RequestParam String search) {
         try {
             Podcast podcast = podcastService.findPodcastById(podcastId);

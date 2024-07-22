@@ -3,6 +3,7 @@ package com.example.backend.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -51,11 +52,23 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/podcast/**").permitAll()
+                        .requestMatchers("/api/auth/**",
+                                "/api/podcasts",
+                                "/api/podcasts/{id}",
+                                "/api/episodes/{id}",
+                                "/api/podcasts/new-released",
+                                "/api/podcasts/top-rated").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/podcasts/{podcastId}/episodes").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/podcasts/{podcastId}/episodes").authenticated()
+                        .requestMatchers("/api/users/**",
+                                "/api/podcasts/{podcastId}/episodes/**").authenticated()
                         .anyRequest().authenticated());
+
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+
 
 }
