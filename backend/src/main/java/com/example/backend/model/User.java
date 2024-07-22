@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -40,8 +41,9 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Subscription> subscriptions;
+    private Set<Subscription> subscriptions = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<FavoriteEpisode> favoriteEpisodes;
@@ -54,4 +56,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Rating> ratings;
+
+    @Override
+    public String toString() {
+        return "User{id=" + id + ", email='" + email + "'}";
+    }
 }

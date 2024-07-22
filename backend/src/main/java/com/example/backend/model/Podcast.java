@@ -5,12 +5,15 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -46,12 +49,18 @@ public class Podcast {
     @OneToMany(mappedBy = "podcast", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Episode> episodes;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "podcast", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Subscription> subscriptions;
+    private Set<Subscription> subscriptions = new HashSet<>();
 
     @OneToMany(mappedBy = "podcast", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<FavoritePodcast> favoritePodcasts;
 
     @OneToMany(mappedBy = "podcast", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Rating> ratings;
+
+    @Override
+    public String toString() {
+        return "Podcast{id=" + id + ", title='" + title + "', description='" + description + "', image='" + image + "'}";
+    }
 }
