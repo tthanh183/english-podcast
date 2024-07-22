@@ -40,8 +40,8 @@ const HomePage = () => {
 
 
   return (
-    <div className="flex flex-col h-screen">
-      <Header className="fixed w-full top-0 z-10" />
+    <div className="flex flex-col">
+      <Header/>
       <div className="flex-1 overflow-y-auto px-4">
         <Typography variant="h4" className="text-green-700">New Released</Typography>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-y-4"

@@ -5,7 +5,7 @@ import HomePage from '../pages/home/HomePage';
 import Channel from '../pages/channel/Channel';
 import EpisodeTable from '../pages/episode/EpisodeTable'
 import Show from '../pages/show/Show'
-import AudioPlay from '../pages/play/AudioPlay';
+import Sound from '../pages/sound/Sound';
 const routes = [
   {
     path: '/',
@@ -22,10 +22,12 @@ const routes = [
   {
     path: '/channel',
     element: <Channel/>,
+    private:true,
   },
   {
     path: '/channel/podcast',
     element: <EpisodeTable/>,
+    private:true,
   },
   {
     path: '/show',
@@ -33,7 +35,7 @@ const routes = [
   },
   {
     path: '/show/play',
-    element: <AudioPlay/>
+    element: <Sound/>
   }
 ];
 
