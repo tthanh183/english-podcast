@@ -8,7 +8,6 @@ export const getPodcasts = async (page, search = "") => {
                 search: search,
             }
         });
-        console.log("DM DAY ROI");
         return response.data;
     } catch (error) {
         console.log(error);

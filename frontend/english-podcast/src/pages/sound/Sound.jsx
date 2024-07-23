@@ -11,10 +11,11 @@ import { useAuth } from "../../contexts/AuthProvider";
 
 const Sound = () => {
   const location = useLocation();
-  const {episodeId, podcastId} = useParams();
+  const { episodeId, podcastId } = useParams();
   const [episode, setEpisode] = useState(null);
-  const {isAuthenticated} = useAuth()
-  const navigate = useNavigate()
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (episodeId) {
       const fetchEpisode = async () => {
@@ -26,13 +27,11 @@ const Sound = () => {
   }, [episodeId]);
 
   const handleClick = () => {
-    if(!isAuthenticated) {
-      localStorage.setItem("previousUrl", location.pathname)
-      navigate('/login')
+    if (!isAuthenticated) {
+      localStorage.setItem("previousUrl", location.pathname);
+      navigate('/login');
     }
-    
-  }
-
+  };
 
   if (!episode) {
     return <p className="text-center text-white">Loading...</p>;
@@ -45,13 +44,12 @@ const Sound = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between mb-6">
           <div className="flex gap-4">
-            <Button variant="outlined" onClick={handleClick}>Subscribe</Button>
-            <Button className="flex items-center gap-3">
+            <Button className="flex items-center gap-3" onClick={handleClick}>
               <PiPlaylistLight />
               Add to Playlist
             </Button>
           </div>
-          <RatingBar />
+          <RatingBar episodeId={episodeId} />
         </div>
         <Comment />
       </div>

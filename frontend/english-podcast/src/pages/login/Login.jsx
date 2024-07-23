@@ -28,8 +28,8 @@ const Login = () => {
       if (userData) {
         auth.handleLogin(userData.token);
         toast.success("Login successfully!");
-        // const previousUrl = localStorage.getItem("previousUrl");
-        // url = previousUrl.length == 0 ? "" : previousUrl;
+        const previousUrl = localStorage.getItem("previousUrl");
+        url = previousUrl.length == 0 ? "" : previousUrl;
         navigate("/");
       } else {
         toast.error("Invalid credentials, please try again.");

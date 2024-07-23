@@ -78,7 +78,6 @@ const Show = () => {
           <p className="text-lg mb-4">{podcast.description}</p>
           <div className="flex justify-center gap-4">
             <Subscribe isSub={isSub} handleSubscribe={handleSubscribe} />
-            <Star />
           </div>
         </div>
 
