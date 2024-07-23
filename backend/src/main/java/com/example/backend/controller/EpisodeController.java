@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/episodes")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class EpisodeController {
     private final IEpisodeService episodeService;
     private final IPodcastService podcastService;

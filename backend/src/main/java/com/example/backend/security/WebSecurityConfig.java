@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
@@ -45,6 +47,20 @@ public class WebSecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:5173")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
+            }
+        };
+    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -57,7 +73,8 @@ public class WebSecurityConfig {
                                 "/api/podcasts/{id}",
                                 "/api/episodes/{id}",
                                 "/api/podcasts/new-released",
-                                "/api/podcasts/top-rated").permitAll()
+                                "/api/podcasts/top-rated",
+                                "/ws/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/podcasts/{podcastId}/episodes").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/podcasts/{podcastId}/episodes").authenticated()
                         .requestMatchers("/api/users/**",

@@ -22,7 +22,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class AuthController {
     private final IUserService userService;
     private final AuthenticationManager authenticationManager;

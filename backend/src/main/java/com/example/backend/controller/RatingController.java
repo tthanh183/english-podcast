@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/ratings")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class RatingController {
     private final IRatingService ratingService;
     private final IUserService userService;
