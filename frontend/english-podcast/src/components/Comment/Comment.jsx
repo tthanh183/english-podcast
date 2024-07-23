@@ -1,25 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
+import CommentList from './CommentList'
+import CommentForm from './CommentForm';
+const PodcastPage = () => {
+  const [comments, setComments] = useState([]);
+  const [stompClient, setStompClient] = useState(null);
 
-const comments = [
-  { id: 1, user: 'John Doe', text: 'Great episode, really enjoyed it!' },
-  { id: 2, user: 'Jane Smith', text: 'Very informative and well-presented.' },
-  { id: 3, user: 'Alex Johnson', text: 'Looking forward to the next one!' },
-];
+  useEffect(() => {
+    // Fetch initial comments
+    axios.get('/api/comments?podcastId=1').then(response => setComments(response.data));
 
-const Comment = () => {
+    // WebSocket setup
+    const socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
+    stompClient.connect({}, () => {
+      stompClient.subscribe('/topic/comments', (message) => {
+        const newComment = JSON.parse(message.body);
+        setComments(prevComments => [...prevComments, newComment]);
+      });
+    });
+    setStompClient(stompClient);
+
+    return () => {
+      if (stompClient) {
+        stompClient.disconnect();
+      }
+    };
+  }, []);
+
+  const handleComment = (content) => {
+    axios.post('/api/comments', { content, podcastId: 1 }).then(response => {
+      setComments(prevComments => [...prevComments, response.data]);
+    });
+  };
+
   return (
-    <div className="bg-gray-800 rounded-lg shadow-lg p-6 mt-6">
-      <h2 className="text-2xl font-semibold mb-4">Comments</h2>
-      <div className="space-y-4">
-        {comments.map((comment) => (
-          <div key={comment.id} className="bg-gray-700 p-4 rounded-lg">
-            <p className="font-semibold">{comment.user}</p>
-            <p>{comment.text}</p>
-          </div>
-        ))}
-      </div>
+    <div>
+      <CommentList comments={comments} />
+      <CommentForm onComment={handleComment} />
     </div>
   );
 };
 
-export default Comment;
+export default PodcastPage;
