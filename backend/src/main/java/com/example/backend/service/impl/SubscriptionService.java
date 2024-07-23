@@ -26,21 +26,6 @@ public class SubscriptionService implements ISubscriptionService {
     }
 
     @Override
-    public List<Subscription> findSubscriptionsByUser(User user) {
-        return subscriptionRepository.findAllByUser(user);
-    }
-
-    @Override
-    public void deleteSubscription(Subscription existingSubscription) {
-        subscriptionRepository.delete(existingSubscription);
-    }
-
-    @Override
-    public void saveSubscription(Subscription newSubscription) {
-        subscriptionRepository.save(newSubscription);
-    }
-
-    @Override
     public void subscribe(Long userId, Long podcastId) {
         User user = userService.findUserById(userId).get();
         Podcast podcast = podcastService.findPodcastById(podcastId);

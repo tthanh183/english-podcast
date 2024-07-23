@@ -1,11 +1,13 @@
 package com.example.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -13,15 +15,23 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Rating {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    private Podcast podcast;
+    private Episode episode;
 
-    private int rates;
+    private int stars;
 
     @Column(name = "create_date")
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
+
+    public Rating(User user, Episode episode) {
+        this.user = user;
+        this.episode = episode;
+    }
 }

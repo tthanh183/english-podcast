@@ -16,8 +16,6 @@ public interface ISubscriptionRepository extends JpaRepository<Subscription, Lon
             "where u.user_id = :userId LIMIT :limit", nativeQuery = true)
     List<Podcast> findTopRecentSubscribedPodcasts(@Param("userId") Long id, @Param("limit") int limit);
 
-    List<Subscription> findAllByUser(User user);
-
     boolean existsSubscriptionsByUserAndPodcast(User user, Podcast podcast);
 
 //    @Query(value = "count(*) from subscription s where podcast_id = :podcastsId group by(podcast_id )", nativeQuery = true)

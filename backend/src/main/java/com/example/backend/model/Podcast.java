@@ -56,9 +56,6 @@ public class Podcast {
     @OneToMany(mappedBy = "podcast", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<FavoritePodcast> favoritePodcasts;
 
-    @OneToMany(mappedBy = "podcast", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Rating> ratings;
-
     @Override
     public String toString() {
         return "Podcast{id=" + id + ", title='" + title + "', description='" + description + "', image='" + image + "'}";

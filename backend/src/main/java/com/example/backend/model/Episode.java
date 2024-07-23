@@ -43,6 +43,9 @@ public class Episode {
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Rating> ratings;
+
+    @OneToMany(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<FavoriteEpisode> favoriteEpisodes;
 
     @OneToMany(mappedBy = "episode", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
