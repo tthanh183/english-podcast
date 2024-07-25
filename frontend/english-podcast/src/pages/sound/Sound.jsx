@@ -39,7 +39,7 @@ const Sound = () => {
         try {
           const response = await getAllComments(episodeId);
           console.log("Fetched comments:", response);
-          setComments(response.data); // Ensure the correct field
+          setComments(response.data); 
         } catch (error) {
           console.error("Error fetching comments:", error);
         }
@@ -77,7 +77,7 @@ const Sound = () => {
       toast.error("Comment cannot be empty");
       return;
     }
-    const commentData = { content: newComment, episode: episode, dateTime: new Date() };
+    const commentData = { content: newComment, episodeId: episodeId, dateTime: new Date() };
     try {
       const response = await addComment(commentData);
       setComments(prevComments => [response, ...prevComments]);
@@ -128,7 +128,7 @@ const Sound = () => {
           </Button>
         </div>
         {comments.length > 0 ? (
-          <CommentList comments={comments} />
+          <CommentList comments={comments}/>
         ) : (
           <p className="text-white">No comments yet</p>
         )}
