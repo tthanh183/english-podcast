@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ICommentRepository extends JpaRepository<Comment, Long> {
 
-    List<Comment> findByEpisodeId(Long episodeId);
+    List<Comment> findByEpisodeIdOrderByDateTimeDesc(Long episodeId);
 }
