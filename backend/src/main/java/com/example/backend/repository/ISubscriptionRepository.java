@@ -18,5 +18,6 @@ public interface ISubscriptionRepository extends JpaRepository<Subscription, Lon
 
     boolean existsSubscriptionsByUserAndPodcast(User user, Podcast podcast);
 
-//    @Query(value = "count(*) from subscription s where podcast_id = :podcastsId group by(podcast_id )", nativeQuery = true)
+    @Query(value = "SELECT u.id FROM user u INNER JOIN subscription s ON u.id = s.user_id WHERE s.podcast_id = :podcastId", nativeQuery = true)
+    List<Long> findSubscribersByPodcastId(@Param("podcastId") Long podcastId);
 }

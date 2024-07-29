@@ -57,6 +57,9 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Rating> ratings;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Notification> notifications;
+
     @Override
     public String toString() {
         return "User{id=" + id + ", email='" + email + "'}";

@@ -51,4 +51,9 @@ public class SubscriptionService implements ISubscriptionService {
     public boolean existsSubscriptionsByUserAndPodcast(User user, Podcast podcast) {
         return subscriptionRepository.existsSubscriptionsByUserAndPodcast(user, podcast);
     }
+
+    @Override
+    public List<Long> findSubscribersByPodcastId(Long id) {
+        return subscriptionRepository.findSubscribersByPodcastId(id);
+    }
 }

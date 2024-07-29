@@ -11,4 +11,6 @@ public interface ISubscriptionService {
     void subscribe(Long userId, Long podcastId);
     void unsubscribe(Long userId, Long podcastId);
     boolean existsSubscriptionsByUserAndPodcast(User user, Podcast podcast);
+
+    List<Long> findSubscribersByPodcastId(Long id);
 }

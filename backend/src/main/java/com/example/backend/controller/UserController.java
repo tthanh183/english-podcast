@@ -31,6 +31,16 @@ public class UserController {
     private final IUserService userService;
     private final IGenreService genreService;
 
+    @GetMapping()
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String email = userDetails.getUsername();
+        User user = userService.findUserByEmail(email);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
     @GetMapping("/podcasts")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> findAllPodcastsByUser(@RequestParam int page,@RequestParam int size, @RequestParam String search) {
