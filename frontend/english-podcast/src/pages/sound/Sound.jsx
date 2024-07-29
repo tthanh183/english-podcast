@@ -73,6 +73,9 @@ const Sound = () => {
   }, [episodeId]);
 
   const handleComment = async () => {
+    if (!isAuthenticated) {
+      toast.info("You must log in to add to playlist");
+    }
     if (newComment.trim() === "") {
       toast.error("Comment cannot be empty");
       return;

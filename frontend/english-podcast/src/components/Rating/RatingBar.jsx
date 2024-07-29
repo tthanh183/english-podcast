@@ -23,8 +23,7 @@ const RatingBar = ({ episodeId }) => {
 
   const handleRating = async (newRating) => {
     if (!isAuthenticated) {
-      toast.error("You must be logged in to rate an episode.");
-      navigate('/login');
+      toast.info("You must be logged in to rate an episode.");
       return;
     }
 

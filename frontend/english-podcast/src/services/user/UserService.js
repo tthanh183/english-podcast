@@ -1,5 +1,14 @@
 import axiosInstance from '../../utils/axiosInstance';
 
+export const getUser = async () => {
+    try {
+        const response = await axiosInstance.get('/users');
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const getPodcastsByUser = async (page, size, search = "") => {
     try {
         const response = await axiosInstance.get('/users/podcasts', {
